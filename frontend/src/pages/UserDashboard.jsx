@@ -13,7 +13,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { useHealth } from '../store/HealthContext';
-import { useHospitalRecommendation } from '../hooks/useHospitalRecommendation';
+
 import HospitalModal from '../components/HospitalModal';
 import Navbar from '../components/Navbar';
 import HeroCard from '../components/HeroCard';
@@ -27,7 +27,7 @@ import api from '../services/api';
 const ArogyaAI = () => {
   const navigate = useNavigate();
   const { selectedSymptoms, toggleSymptom, triageResult, setTriageResult, runTriage, error, loading } = useHealth();
-  const { recommendedHospitals, isLoading: hospitalsLoading } = useHospitalRecommendation();
+
   const { sendMessage, setIsChatOpen } = useChatHook();
   const [selectedHospital, setSelectedHospital] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -154,7 +154,6 @@ const ArogyaAI = () => {
               id: 'hospitals',
               title: 'Hospitals & Centers',
               desc: 'Find nearby emergency rooms and trusted healthcare facilities.',
-              count: `${recommendedHospitals?.length || 12} Nearby`,
               color: 'text-blue-600',
               bgWash: 'bg-blue-50',
               icon: <MapPin size={28} />
@@ -163,7 +162,6 @@ const ArogyaAI = () => {
               id: 'reports',
               title: 'Medical Reports',
               desc: 'Track your symptom progression and AI health summaries.',
-              count: '2 New Updates',
               color: 'text-green-600',
               bgWash: 'bg-green-50',
               icon: <FileText size={28} />
@@ -172,7 +170,6 @@ const ArogyaAI = () => {
               id: 'care_circle',
               title: 'Care Circle',
               desc: 'Manage your trusted emergency contacts and family network.',
-              count: 'Active Alerts',
               color: 'text-lime-pulse',
               bgWash: 'bg-lime-pulse/15',
               icon: <Users size={28} />
@@ -193,13 +190,10 @@ const ArogyaAI = () => {
               whileHover={{ y: -6, scale: 1.02 }}
               className="rounded-[20px] p-8 bg-white border border-carbon-black cursor-pointer group flex flex-col justify-between min-h-[220px] shadow-brutal hover:shadow-brutal-dark transition-all"
             >
-              <div className="flex justify-between items-start mb-6">
+              <div className="mb-6">
                 <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border border-carbon-black group-hover:scale-110 transition-transform shadow-brutal-sm ${card.bgWash} ${card.color}`}>
                   {card.icon}
                 </div>
-                <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-carbon-black shadow-brutal-sm ${card.bgWash} ${card.color}`}>
-                  {card.count}
-                </span>
               </div>
               <div>
                 <h5 className="font-bold text-xl tracking-tight uppercase mb-2 text-carbon-black">
