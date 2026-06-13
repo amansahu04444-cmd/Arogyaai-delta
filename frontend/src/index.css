@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Satoshi", system-ui, sans-serif;
+  
+  /* Brainfish Palette */
+  --color-lime-pulse: #a3e635;
+  --color-carbon-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-graphite: #171717;
+  --color-shadow-ink: #0a0a0d;
+  --color-fog: #f5f5f5;
+  --color-steel: #737373;
+  --color-iron: #222222;
+  --color-slate: #333333;
+  --color-buttercream: #fef3c8;
+  --color-mint-wash: #d2fae5;
+  --color-lilac-mist: #fae9ff;
+  --color-bubblegum: #f5d1fe;
+  --color-amber-spark: #fbbf25;
+  --color-sky-wash: #b7eaf6;
+  --color-cobalt-field: #3366e0;
+  --color-meadow: #b9f0c0;
+
+  /* Keep legacy neo colors for other routes */
+  --color-neo-yellow: #fde047;
+  --color-neo-green: #34d399;
+  --color-neo-pink: #fbcfe8;
+  --color-neo-purple: #c4b5fd;
+  --color-neo-red: #ef4444;
+  --color-neo-blue: #93c5fd;
+  --color-neo-bg: #fffbf0;
+}
+
+@layer base {
+  body {
+    @apply bg-white font-sans text-black selection:bg-lime-pulse;
+    font-feature-settings: "ss01" on, "cv11" on;
+  }
+}
+
+@layer utilities {
+  .brutal-border {
+    border: 1px solid #000000;
+  }
+  .brutal-border-2 {
+    border: 2px solid #000000;
+  }
+  .brutal-border-5 {
+    border: 5px solid #000000;
+  }
+  
+  /* Brainfish elevation shadow stacks */
+  .brutal-shadow {
+    box-shadow: 2px 2px 0px 0px #0a0a0d;
+  }
+  .brutal-shadow-lg {
+    box-shadow: 4px 4px 0px 0px #171717;
+  }
+  .shadow-brutal-sm {
+    box-shadow: 1px 1px 0px 0px #0a0a0d;
+  }
+  .shadow-brutal {
+    box-shadow: 2px 2px 0px 0px #0a0a0d;
+  }
+  .shadow-brutal-lg {
+    box-shadow: 4px 4px 0px 0px #0a0a0d;
+  }
+  .shadow-brutal-dark {
+    box-shadow: 4px 4px 0px 0px #171717;
+  }
+  
+  /* Smooth transform transition for hover effects */
+  .brutal-hover {
+    @apply transition-all duration-200 ease-out;
+  }
+  .brutal-hover:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0px 0px #0a0a0d;
+  }
+  .brutal-hover-lg:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 8px 8px 0px 0px #171717;
+  }
+  .brutal-hover-active:active {
+    transform: translate(0px, 0px);
+    box-shadow: 0px 0px 0px 0px rgba(0,0,0,1);
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 8px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 9999px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.35);
+  }
+}
