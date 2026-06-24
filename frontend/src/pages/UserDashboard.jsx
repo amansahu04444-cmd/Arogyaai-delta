@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Mic,
   Activity,
@@ -10,9 +10,10 @@ import {
   MapPin,
   Users,
   TrendingUp,
-  ShieldCheck,
+  ShieldCheck
 } from 'lucide-react';
 import { useHealth } from '../store/HealthContext';
+import { useUserStore } from '../store/userStore';
 
 import HospitalModal from '../components/HospitalModal';
 import Navbar from '../components/Navbar';
@@ -27,6 +28,7 @@ import api from '../services/api';
 const ArogyaAI = () => {
   const navigate = useNavigate();
   const { selectedSymptoms, toggleSymptom, triageResult, setTriageResult, runTriage, error, loading } = useHealth();
+  const { logout, user } = useUserStore();
 
   const { sendMessage, setIsChatOpen } = useChatHook();
   const [selectedHospital, setSelectedHospital] = useState(null);
@@ -77,8 +79,6 @@ const ArogyaAI = () => {
     setIsModalOpen(true);
   };
 
-
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -93,7 +93,7 @@ const ArogyaAI = () => {
   };
 
   return (
-    <div className="min-h-screen text-carbon-black font-sans bg-fog pb-20 selection:bg-lime-pulse/30">
+    <div className="min-h-screen text-slate-900 font-sans bg-slate-50 pb-20 selection:bg-blue-600/30">
 
       <Navbar />
 
@@ -101,23 +101,24 @@ const ArogyaAI = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="pt-36 px-6 md:px-12 max-w-[1400px] mx-auto space-y-12"
+        className="pt-20 lg:pt-6 px-4 md:px-8 max-w-[1100px] mx-auto flex flex-col min-h-[calc(100vh-80px)] gap-4"
       >
+
         {/* Emergency Alert Status Banner */}
         {triageResult && (triageResult.risk === 'HIGH' || triageResult.emergency) && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`p-5 rounded-2xl border-2 border-carbon-black flex items-center justify-between shadow-brutal-sm ${triageResult.telegram_sent ? 'bg-green-100 text-green-950 border-green-500' : 'bg-red-100 text-red-950 border-red-500'
+            className={`p-5 rounded-[24px] border flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm ${triageResult.telegram_sent ? 'bg-green-50 text-green-900 border-green-200' : 'bg-red-50 text-red-900 border-red-200'
               }`}
           >
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">🚨</span>
-              <div>
-                <span className="font-extrabold text-base block uppercase tracking-wide">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl mt-0.5 shrink-0">🚨</span>
+              <div className="min-w-0 flex-1">
+                <span className="font-extrabold text-base block uppercase tracking-wide break-words">
                   {triageResult.telegram_sent ? 'Emergency Alert: ✓ Sent Successfully' : 'Emergency Alert: ⚠ Failed'}
                 </span>
-                <span className="text-xs font-semibold opacity-80">
+                <span className="text-xs font-semibold opacity-80 block break-words whitespace-normal mt-0.5">
                   {triageResult.telegram_sent
                     ? 'Your connected Care Circle members have been automatically notified via Telegram.'
                     : triageResult.telegram_error || 'No active Care Circle members connected to Telegram Bot.'
@@ -127,15 +128,15 @@ const ArogyaAI = () => {
             </div>
             <button
               onClick={() => setTriageResult(null)}
-              className="text-xs font-bold uppercase tracking-wider underline hover:opacity-85"
+              className="text-xs font-bold uppercase tracking-wider underline hover:opacity-85 self-end sm:self-auto shrink-0"
             >
               Dismiss
             </button>
           </motion.div>
         )}
 
-        {/* Top Section: Main Layout */}
-        <div className="w-full min-h-[70vh] flex flex-col">
+        {/* Main Section: Voice Triage Full Width */}
+        <div className="w-full min-h-[85vh] flex flex-col">
           <HeroCard
             itemVariants={itemVariants}
             triageResult={triageResult}
@@ -146,75 +147,12 @@ const ArogyaAI = () => {
           />
         </div>
 
-        {/* Bottom Section: Priorities + Analysis */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Top Row: Priorities */}
-          {[
-            {
-              id: 'hospitals',
-              title: 'Hospitals & Centers',
-              desc: 'Find nearby emergency rooms and trusted healthcare facilities.',
-              color: 'text-blue-600',
-              bgWash: 'bg-blue-50',
-              icon: <MapPin size={28} />
-            },
-            {
-              id: 'reports',
-              title: 'Medical Reports',
-              desc: 'Track your symptom progression and AI health summaries.',
-              color: 'text-green-600',
-              bgWash: 'bg-green-50',
-              icon: <FileText size={28} />
-            },
-            {
-              id: 'care_circle',
-              title: 'Care Circle',
-              desc: 'Manage your trusted emergency contacts and family network.',
-              color: 'text-lime-pulse',
-              bgWash: 'bg-lime-pulse/15',
-              icon: <Users size={28} />
-            }
-          ].map((card, i) => (
-            <motion.div
-              key={i}
-              onClick={() => {
-                if (card.id === 'care_circle') {
-                  setIsCareCircleModalOpen(true);
-                } else if (card.id === 'hospitals') {
-                  navigate('/hospitals');
-                } else if (card.id === 'reports') {
-                  navigate('/report');
-                }
-              }}
-              variants={itemVariants}
-              whileHover={{ y: -6, scale: 1.02 }}
-              className="rounded-[20px] p-8 bg-white border border-carbon-black cursor-pointer group flex flex-col justify-between min-h-[220px] shadow-brutal hover:shadow-brutal-dark transition-all"
-            >
-              <div className="mb-6">
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border border-carbon-black group-hover:scale-110 transition-transform shadow-brutal-sm ${card.bgWash} ${card.color}`}>
-                  {card.icon}
-                </div>
-              </div>
-              <div>
-                <h5 className="font-bold text-xl tracking-tight uppercase mb-2 text-carbon-black">
-                  {card.title}
-                </h5>
-                <p className="text-sm font-semibold text-steel leading-snug">
-                  {card.desc}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
       </motion.main>
 
       <HospitalModal hospital={selectedHospital} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <FamilyContactsModal isOpen={isCareCircleModalOpen} onClose={() => setIsCareCircleModalOpen(false)} />
 
       <ChatWindow />
-
-
 
     </div>
   );

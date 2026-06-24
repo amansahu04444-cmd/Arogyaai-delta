@@ -259,25 +259,25 @@ const Consultation = () => {
   // Render formatted components for triage results inside the chat message bubble
   const renderMessageContent = (msg) => {
     if (msg.role === 'user') {
-      return <p className="font-bold text-sm leading-relaxed whitespace-pre-line">{msg.text}</p>;
+      return <p className="font-bold text-sm leading-relaxed whitespace-pre-line break-words">{msg.text}</p>;
     }
 
     const triage = msg.triage;
     const rec = triage?.recommendation;
 
     if (!triage || !rec || typeof rec === 'string') {
-      return <p className="font-bold text-sm leading-relaxed whitespace-pre-line">{msg.text}</p>;
+      return <p className="font-bold text-sm leading-relaxed whitespace-pre-line break-words">{msg.text}</p>;
     }
 
     return (
-      <div className="space-y-4 text-carbon-black">
+      <div className="space-y-4 text-slate-900">
         {rec.summary && (
           <p className="font-bold text-sm leading-relaxed">{rec.summary}</p>
         )}
 
         {rec.possible_causes && rec.possible_causes.length > 0 && (
           <div className="space-y-1">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-steel">Possible Causes:</h4>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">Possible Causes:</h4>
             <ul className="list-disc pl-5 space-y-0.5 text-sm font-bold">
               {rec.possible_causes.map((item, index) => (
                 <li key={index}>{item}</li>
@@ -288,7 +288,7 @@ const Consultation = () => {
 
         {rec.home_care && rec.home_care.length > 0 && (
           <div className="space-y-1">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-steel">Home Care:</h4>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">Home Care:</h4>
             <ul className="list-disc pl-5 space-y-0.5 text-sm font-bold">
               {rec.home_care.map((item, index) => (
                 <li key={index}>{item}</li>
@@ -299,7 +299,7 @@ const Consultation = () => {
 
         {rec.doctor_visit && rec.doctor_visit.length > 0 && (
           <div className="space-y-1">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-steel">Doctor Visit:</h4>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">Doctor Visit:</h4>
             <ul className="list-disc pl-5 space-y-0.5 text-sm font-bold">
               {rec.doctor_visit.map((item, index) => (
                 <li key={index}>{item}</li>
@@ -309,9 +309,9 @@ const Consultation = () => {
         )}
 
         {rec.warning_signs && rec.warning_signs.length > 0 && (
-          <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl space-y-1">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-red-600 flex items-center gap-1">
-              <AlertCircle size={14} /> Warning Signs:
+          <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-[16px] space-y-1">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-red-600 flex items-center gap-1.5">
+              <AlertCircle size={16} /> Warning Signs:
             </h4>
             <ul className="list-disc pl-5 space-y-0.5 text-sm font-bold text-red-600">
               {rec.warning_signs.map((item, index) => (
@@ -322,7 +322,7 @@ const Consultation = () => {
         )}
 
         {triage.followUpQuestion && (
-          <div className="pt-2 border-t border-carbon-black/10 mt-2 text-carbon-black/80 font-bold italic text-sm">
+          <div className="pt-2 border-t border-slate-100 mt-2 text-slate-900/80 font-bold italic text-sm">
             {triage.followUpQuestion}
           </div>
         )}
@@ -341,36 +341,29 @@ const Consultation = () => {
   };
 
   return (
-    <div className="min-h-screen text-carbon-black font-sans bg-fog pb-20 selection:bg-lime-pulse/30">
+    <div className="min-h-screen text-slate-900 font-sans bg-slate-50 pb-20 selection:bg-blue-600/30">
       <Navbar />
 
       <motion.main
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="pt-36 px-6 md:px-12 max-w-[1400px] mx-auto space-y-12"
+        className="pt-24 lg:pt-32 px-6 md:px-12 max-w-[1400px] mx-auto space-y-12"
       >
-        {/* Header */}
-        <motion.div variants={itemVariants} className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-carbon-black/10 pb-10">
-          <div>
-            <div className="flex items-center gap-3 text-carbon-black font-bold uppercase tracking-widest text-xs mb-4">
-              <Activity size={16} /> AI Consultation
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold uppercase tracking-tight leading-none mb-4 text-carbon-black">
-              Medical<br />Consultation
-            </h1>
-            <p className="text-steel font-bold text-lg max-w-xl">
-              Describe your symptoms in any language for AI-powered triage assessment.
-            </p>
-          </div>
-        </motion.div>
-
+        <div className="flex flex-col mb-8 text-center">
+          <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 mb-4">
+            AI Medical Consultation
+          </h1>
+          <p className="text-base lg:text-lg text-slate-500 leading-7 max-w-2xl mx-auto">
+            Describe your symptoms to our intelligent triage assistant for immediate clinical evaluation and recommended next steps.
+          </p>
+        </div>
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* Chat Section */}
           <motion.div
             variants={itemVariants}
-            className="lg:col-span-2 rounded-[20px] p-8 bg-white border border-carbon-black shadow-brutal-dark min-h-[600px] max-h-[800px] flex flex-col"
+            className="lg:col-span-2 rounded-[24px] p-6 md:p-8 bg-white border border-slate-200 shadow-sm min-h-[600px] max-h-[800px] flex flex-col"
           >
             {/* Conversation */}
             <div className="flex-1 overflow-y-auto scrollbar-hide space-y-6 mb-6 pr-2">
@@ -381,37 +374,37 @@ const Consultation = () => {
                   animate={{ opacity: 1, y: 0 }}
                   className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div className={`max-w-[85%] p-6 rounded-[20px] border border-carbon-black shadow-brutal-sm ${
+                  <div className={`max-w-[85%] p-4 md:p-5 rounded-[24px] shadow-sm ${
                     msg.role === 'user'
-                      ? 'bg-lime-pulse rounded-tr-none text-carbon-black'
-                      : 'bg-fog rounded-tl-none text-carbon-black'
+                      ? 'bg-med-primary text-white rounded-tr-none'
+                      : 'bg-slate-50 border border-slate-100 rounded-tl-none text-slate-900'
                   }`}>
                     {renderMessageContent(msg)}
                     
                     {msg.triage && (
-                      <div className="mt-4 pt-4 border-t border-carbon-black/10">
-                        <div className="flex flex-wrap items-center gap-3 text-xs font-bold uppercase tracking-widest">
-                          <span className={`px-3 py-1 rounded-full border border-carbon-black shadow-brutal-sm ${
-                            msg.triage.risk === 'HIGH' ? 'bg-red-100 text-red-600' :
-                            msg.triage.risk === 'MEDIUM' ? 'bg-orange-100 text-orange-600' :
-                            'bg-green-100 text-green-600'
+                      <div className="mt-4 pt-4 border-t border-slate-100">
+                        <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-wider">
+                          <span className={`px-3 py-1 rounded-full shadow-sm ${
+                            msg.triage.risk === 'HIGH' ? 'bg-red-50 text-red-600 border border-red-100' :
+                            msg.triage.risk === 'MEDIUM' ? 'bg-orange-50 text-orange-600 border border-orange-100' :
+                            'bg-green-50 text-green-600 border border-green-100'
                           }`}>
                             {msg.triage.risk} Risk
                           </span>
                           {(msg.triage.score !== undefined || msg.triage.triage_score !== undefined) && (
-                            <span className="text-steel">
+                            <span className="text-slate-500">
                               Score: {msg.triage.score ?? msg.triage.triage_score}
                             </span>
                           )}
                           {msg.triage.category && (
-                            <span className="text-steel border border-carbon-black/15 px-2 py-0.5 rounded bg-white/70 shadow-brutal-sm">
+                            <span className="text-slate-500 border border-slate-200 px-2 py-0.5 rounded bg-white shadow-sm">
                               {msg.triage.category}
                             </span>
                           )}
                         </div>
                       </div>
                     )}
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-steel/60 mt-3 text-right">
+                    <p className={`text-[10px] font-semibold uppercase tracking-wider mt-3 text-right ${msg.role === 'user' ? 'text-white/80' : 'text-slate-400'}`}>
                       {new Date(msg.timestamp).toLocaleTimeString()}
                     </p>
                   </div>
@@ -420,16 +413,16 @@ const Consultation = () => {
 
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-fog border border-carbon-black p-4 rounded-2xl rounded-tl-none flex items-center gap-3 shadow-brutal-sm">
-                    <Loader2 size={20} className="text-carbon-black animate-spin" />
-                    <span className="text-carbon-black font-bold text-sm">Analyzing symptoms...</span>
+                  <div className="bg-slate-50 border border-slate-100 p-4 rounded-[24px] rounded-tl-none flex items-center gap-3 shadow-sm">
+                    <Loader2 size={20} className="text-slate-600 animate-spin" />
+                    <span className="text-slate-600 font-medium text-sm">Analyzing symptoms...</span>
                   </div>
                 </div>
               )}
 
               {error && (
                 <div className="flex justify-center">
-                  <div className="bg-red-50 border border-red-200 p-4 rounded-2xl flex items-center gap-3 shadow-brutal-sm">
+                  <div className="bg-red-50 border border-red-200 p-4 rounded-[24px] flex items-center gap-3 shadow-sm">
                     <AlertCircle size={20} className="text-red-600" />
                     <span className="text-red-600 font-bold text-sm">{error}</span>
                   </div>
@@ -439,40 +432,46 @@ const Consultation = () => {
             </div>
 
             {/* Input Area */}
-            <div className="border-t border-carbon-black/10 pt-6">
-              <div className="flex gap-4 items-end">
-                <div className="flex-1 relative">
-                  <textarea
-                    value={inputText}
-                    onChange={(e) => setInputText(e.target.value)}
-                    onKeyDown={handleKeyPress}
-                    placeholder="Type symptoms here..."
-                    className="w-full p-6 bg-white border border-carbon-black rounded-2xl resize-none focus:outline-none focus:shadow-brutal transition-all font-bold text-sm text-carbon-black placeholder-steel"
-                    rows={2}
-                  />
+            <div className="border-t border-slate-100 pt-5">
+              <form 
+                onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }} 
+                className="relative flex items-center w-full bg-white border border-slate-200 rounded-[20px] shadow-[0_8px_30px_rgb(0,0,0,0.08)] p-2 focus-within:ring-2 focus-within:ring-blue-500 transition-all"
+              >
+                <textarea
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  onKeyDown={handleKeyPress}
+                  placeholder="Type symptoms here..."
+                  className="flex-1 bg-transparent border-none px-4 py-3 text-[17px] font-medium text-slate-900 focus:outline-none focus:ring-0 placeholder-slate-400 resize-none min-h-[48px] max-h-[140px] custom-scrollbar"
+                  rows={1}
+                />
+                <div className="flex items-center gap-2 shrink-0 pr-1">
+                  <motion.button 
+                    type="button"
+                    onClick={toggleMic}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`w-[48px] h-[48px] rounded-full flex items-center justify-center transition-all cursor-pointer ${
+                      isListening
+                        ? 'bg-red-50 text-red-500 animate-pulse'
+                        : 'bg-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-100'
+                    }`}
+                    title="Voice Input"
+                  >
+                    {isListening ? <MicOff size={24} /> : <Mic size={24} />}
+                  </motion.button>
+                  <motion.button
+                    type="submit"
+                    disabled={!inputText.trim() || isLoading}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-[48px] h-[48px] bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Send Message"
+                  >
+                    <Send size={22} className="ml-0.5" />
+                  </motion.button>
                 </div>
-                <motion.button
-                  onClick={toggleMic}
-                  whileTap={{ scale: 0.95 }}
-                  className={`w-16 h-16 shrink-0 rounded-2xl flex items-center justify-center border border-carbon-black transition-all shadow-brutal hover:shadow-brutal-dark cursor-pointer ${
-                    isListening
-                      ? 'bg-red-500 animate-pulse text-white'
-                      : 'bg-white text-carbon-black'
-                  }`}
-                  title="Voice Input"
-                >
-                  {isListening ? <MicOff size={24} /> : <Mic size={24} />}
-                </motion.button>
-                <motion.button
-                  onClick={() => handleSendMessage()}
-                  disabled={!inputText.trim() || isLoading}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-16 h-16 shrink-0 bg-lime-pulse border border-carbon-black rounded-2xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-brutal hover:shadow-brutal-dark transition-all text-carbon-black cursor-pointer"
-                  title="Send Message"
-                >
-                  <Send size={24} />
-                </motion.button>
-              </div>
+              </form>
 
               {/* Voice settings */}
               <div className="flex items-center gap-2 mt-3 px-1">
@@ -481,9 +480,9 @@ const Consultation = () => {
                   id="auto-send-voice"
                   checked={autoSend}
                   onChange={(e) => setAutoSend(e.target.checked)}
-                  className="w-4 h-4 cursor-pointer accent-lime-pulse rounded border border-carbon-black"
+                  className="w-4 h-4 cursor-pointer accent-blue-600 rounded border border-slate-200"
                 />
-                <label htmlFor="auto-send-voice" className="text-[10px] font-bold uppercase tracking-widest text-steel cursor-pointer select-none">
+                <label htmlFor="auto-send-voice" className="text-[10px] font-bold uppercase tracking-widest text-slate-500 cursor-pointer select-none">
                   Auto-send after speech recognition
                 </label>
               </div>
@@ -493,10 +492,10 @@ const Consultation = () => {
           {/* Sidebar - Quick Symptoms Suggestions */}
           <motion.div
             variants={itemVariants}
-            className="rounded-[20px] p-8 bg-sky-wash border border-carbon-black shadow-brutal-dark h-fit"
+            className="rounded-[24px] p-6 md:p-8 bg-white border border-slate-200 shadow-sm h-fit"
           >
-            <h3 className="text-xl font-bold uppercase tracking-tight mb-6 flex items-center gap-3 text-carbon-black">
-              <Activity /> Quick Symptoms
+            <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+              <Activity size={20} className="text-med-primary" /> Quick Symptoms
             </h3>
 
             <div className="space-y-4">
@@ -516,16 +515,16 @@ const Consultation = () => {
                     key={symptom.label}
                     onClick={() => handleSymptomClick(symptom.label)}
                     whileTap={{ scale: 0.95 }}
-                    className={`w-full p-4 rounded-xl border transition-all text-left font-bold text-sm cursor-pointer ${
+                    className={`w-full p-3 md:p-4 rounded-[16px] border transition-all text-left font-medium text-sm cursor-pointer ${
                       isActive
-                        ? 'border-carbon-black bg-lime-pulse shadow-brutal-sm text-carbon-black'
-                        : 'border-transparent bg-white/40 hover:bg-white hover:border-carbon-black text-steel hover:text-carbon-black'
+                        ? 'border-med-primary bg-med-primary/5 text-med-primary shadow-sm'
+                        : 'border-slate-100 bg-slate-50 hover:bg-white hover:border-slate-200 hover:shadow-sm text-slate-600'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <span>{symptom.label}</span>
                       {isActive && (
-                        <div className="w-3 h-3 bg-white border border-carbon-black rounded-full shadow-brutal-sm animate-pulse" />
+                        <div className="w-2.5 h-2.5 bg-med-primary rounded-full shadow-sm animate-pulse" />
                       )}
                     </div>
                   </motion.button>

@@ -25,26 +25,26 @@ const Login = () => {
     }
   };
 
-  const inputStyle = "w-full bg-white border border-carbon-black rounded-xl px-4 py-4 text-carbon-black font-bold outline-none focus:shadow-brutal transition-all placeholder-steel";
+  const inputStyle = "w-full bg-white border border-slate-200 rounded-[16px] h-[56px] pl-[52px] pr-[16px] text-slate-900 font-medium outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all placeholder-slate-400";
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-sky-wash text-carbon-black font-sans selection:bg-lime-pulse/30">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50 text-slate-900 font-sans selection:bg-blue-600/30">
       
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white border border-carbon-black rounded-[20px] p-8 md:p-10 relative z-10 shadow-brutal-dark"
+        className="w-full max-w-[560px] bg-white border border-slate-200 rounded-[24px] p-[40px] md:p-[48px] relative z-10 shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
       >
         
         {/* Logo */}
-        <div className="flex flex-col items-center mb-10 relative z-10">
-          <div className="bg-lime-pulse p-4 rounded-2xl border border-carbon-black mb-6 shadow-brutal-sm">
-            <Activity size={32} className="text-carbon-black" />
+        <div className="flex flex-col items-center mb-[40px] relative z-10">
+          <div className="bg-blue-600 p-4 rounded-2xl border border-slate-200 mb-[20px] shadow-sm">
+            <Activity size={32} className="text-white" />
           </div>
-          <h1 className="text-4xl font-bold tracking-tight uppercase text-carbon-black">
-            Arogya<span className="text-lime-pulse">AI</span>
+          <h1 className="text-4xl font-extrabold tracking-normal uppercase text-slate-900 leading-none">
+            Arogya<span className="text-blue-600">AI</span>
           </h1>
-          <p className="text-steel font-bold mt-2 text-center uppercase tracking-widest text-xs">
+          <p className="text-slate-500 font-semibold mt-[12px] text-center uppercase tracking-[2px] text-[14px]">
             Digital Health Command Center
           </p>
         </div>
@@ -53,23 +53,23 @@ const Login = () => {
           <motion.div 
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm font-bold text-center"
+            className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm font-medium text-center"
           >
             {error}
           </motion.div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6 relative z-10" noValidate>
-          <div className="space-y-2">
-            <label className="block text-xs font-bold uppercase tracking-widest text-steel ml-1">
+        <form onSubmit={handleSubmit} className="relative z-10 flex flex-col" noValidate>
+          <div className="mb-[24px]">
+            <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 ml-1 mb-2">
               Email Address
             </label>
             <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-steel" />
+              <Mail size={22} className="absolute left-[16px] top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
               <input
                 type="email"
                 required
-                className={`${inputStyle} pl-12`}
+                className={inputStyle}
                 placeholder="name@example.com"
                 value={formData.email}
                 onChange={(e) => {
@@ -80,24 +80,24 @@ const Login = () => {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <div className="flex justify-between items-center ml-1">
-              <label className="block text-xs font-bold uppercase tracking-widest text-steel">
+          <div className="mb-[32px]">
+            <div className="flex justify-between items-center ml-1 mb-2">
+              <label className="block text-xs font-bold uppercase tracking-widest text-slate-500">
                 Password
               </label>
               <button 
                 type="button" 
-                className="text-[10px] font-bold uppercase tracking-widest text-carbon-black hover:text-lime-pulse transition-colors"
+                className="text-[14px] font-medium text-slate-900 hover:text-blue-600 transition-colors"
               >
                 Forgot?
               </button>
             </div>
             <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-steel" />
+              <Lock size={22} className="absolute left-[16px] top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
               <input
                 type="password"
                 required
-                className={`${inputStyle} pl-12`}
+                className={inputStyle}
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={(e) => {
@@ -112,20 +112,20 @@ const Login = () => {
             whileTap={{ scale: 0.98 }}
             disabled={isLoading}
             type="submit"
-            className="w-full bg-lime-pulse text-carbon-black py-4 rounded-xl font-bold text-sm uppercase tracking-widest border border-carbon-black shadow-brutal hover:shadow-brutal-dark active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed mt-4"
+            className="w-full h-[56px] bg-blue-600 text-white rounded-[16px] font-semibold text-[16px] shadow-sm hover:shadow-md hover:bg-blue-700 transition-all flex items-center justify-center gap-[12px] disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
+              <Loader2 size={24} className="animate-spin" />
             ) : (
-              <>Sign In <ArrowRight className="w-5 h-5" /></>
+              <>Sign In <ArrowRight size={24} /></>
             )}
           </motion.button>
         </form>
 
-        <p className="mt-10 text-center font-bold text-steel text-xs uppercase tracking-widest relative z-10">
+        <p className="mt-[32px] text-center font-bold text-slate-500 text-xs uppercase tracking-widest relative z-10">
           New to ArogyaAI?{' '}
           <button 
-            className="text-carbon-black hover:text-lime-pulse ml-1 transition-colors" 
+            className="text-slate-900 hover:text-blue-600 ml-1 transition-colors" 
             onClick={() => navigate('/signup')}
           >
             Create Account

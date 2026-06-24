@@ -79,7 +79,7 @@ const HospitalModal = ({ hospital, isOpen, onClose, userLocation }) => {
     return (
       <CardWrapper isOpen={isOpen} onClose={onClose} maxWidth="max-w-5xl">
         {/* Left side skeleton */}
-        <div className="p-8 md:p-10 flex-grow w-full md:w-1/2 overflow-y-auto max-h-[80vh] md:max-h-[90vh] text-carbon-black animate-pulse space-y-6">
+        <div className="p-8 md:p-10 flex-grow w-full md:w-1/2 overflow-y-auto max-h-[80vh] md:max-h-[90vh] text-slate-900 animate-pulse space-y-6">
           <div className="flex gap-2 items-center">
             <div className="h-6 w-24 bg-steel/20 rounded-xl"></div>
             <div className="h-5 w-10 bg-steel/20 rounded"></div>
@@ -115,7 +115,7 @@ const HospitalModal = ({ hospital, isOpen, onClose, userLocation }) => {
         </div>
 
         {/* Right side map placeholder */}
-        <div className="w-full md:w-1/2 h-64 md:h-auto bg-steel/10 border-t md:border-t-0 md:border-l border-carbon-black/10 flex items-center justify-center min-h-[300px]">
+        <div className="w-full md:w-1/2 h-64 md:h-auto bg-steel/10 border-t md:border-t-0 md:border-l border-slate-100 flex items-center justify-center min-h-[300px]">
           <div className="h-10 w-32 bg-steel/20 rounded animate-pulse"></div>
         </div>
       </CardWrapper>
@@ -156,13 +156,13 @@ const HospitalModal = ({ hospital, isOpen, onClose, userLocation }) => {
   return (
     <CardWrapper isOpen={isOpen} onClose={onClose} maxWidth="max-w-5xl">
             {/* Left side: Hospital Details */}
-            <div className="p-8 md:p-10 flex-1 overflow-y-auto max-h-[80vh] md:max-h-[90vh] text-carbon-black">
+            <div className="p-8 md:p-10 flex-1 overflow-y-auto max-h-[80vh] md:max-h-[90vh] text-slate-900">
               {/* Type badge & Rating */}
               <div className="flex items-center gap-3 mb-6">
                 <span className={`px-4 py-1.5 rounded-xl text-xs font-bold uppercase tracking-widest border-2 ${
                   hospitalType === 'Emergency' ? 'bg-red-50 text-red-600 border-red-300' :
                   hospitalType === 'Cardiology' ? 'bg-blue-50 text-blue-700 border-blue-300' :
-                  'bg-mint-wash text-green-700 border-green-300'
+                  'bg-slate-50 text-green-700 border-green-300'
                 }`}>
                   {hospitalType} Specialist
                 </span>
@@ -173,23 +173,23 @@ const HospitalModal = ({ hospital, isOpen, onClose, userLocation }) => {
               </div>
 
               {/* Hospital Name */}
-              <h2 className="text-4xl font-bold uppercase tracking-tight mb-6 leading-none text-carbon-black">
+              <h2 className="text-4xl font-bold uppercase tracking-tight mb-6 leading-none text-slate-900">
                 {hospitalName}
               </h2>
 
               {/* Key Info Grid */}
               <div className="space-y-4 mb-8">
                 {/* Address + Distance */}
-                <div className="flex items-center gap-4 text-steel font-bold">
-                  <div className="w-10 h-10 shrink-0 rounded-xl bg-fog border border-carbon-black/10 flex items-center justify-center text-carbon-black">
+                <div className="flex items-center gap-4 text-slate-500 font-bold">
+                  <div className="w-10 h-10 shrink-0 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-900">
                     <MapPin size={20} />
                   </div>
                   <span>{hospitalAddress} • <span className="text-blue-600">{hospitalDistance} {hospitalDistance !== 'Calculating...' ? 'away' : ''}</span></span>
                 </div>
 
                 {/* Hours + Travel Time */}
-                <div className="flex items-center gap-4 text-steel font-bold">
-                  <div className="w-10 h-10 shrink-0 rounded-xl bg-fog border border-carbon-black/10 flex items-center justify-center text-green-600">
+                <div className="flex items-center gap-4 text-slate-500 font-bold">
+                  <div className="w-10 h-10 shrink-0 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-green-600">
                     <Clock size={20} />
                   </div>
                   <span>
@@ -199,16 +199,16 @@ const HospitalModal = ({ hospital, isOpen, onClose, userLocation }) => {
                 </div>
 
                 {/* Rating detail */}
-                <div className="flex items-center gap-4 text-steel font-bold">
-                  <div className="w-10 h-10 shrink-0 rounded-xl bg-fog border border-carbon-black/10 flex items-center justify-center text-amber-spark">
+                <div className="flex items-center gap-4 text-slate-500 font-bold">
+                  <div className="w-10 h-10 shrink-0 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-amber-spark">
                     <Star size={20} />
                   </div>
-                  <span>Rating: <span className="text-carbon-black">{hospitalRating} / 5.0</span> — {hospitalRating >= 4.5 ? 'Excellent' : hospitalRating >= 4.0 ? 'Very Good' : 'Good'}</span>
+                  <span>Rating: <span className="text-slate-900">{hospitalRating} / 5.0</span> — {hospitalRating >= 4.5 ? 'Excellent' : hospitalRating >= 4.0 ? 'Very Good' : 'Good'}</span>
                 </div>
 
                 {/* Phone */}
-                <div className="flex items-center gap-4 text-steel font-bold">
-                  <div className="w-10 h-10 shrink-0 rounded-xl bg-fog border border-carbon-black/10 flex items-center justify-center text-green-600">
+                <div className="flex items-center gap-4 text-slate-500 font-bold">
+                  <div className="w-10 h-10 shrink-0 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-green-600">
                     <Phone size={20} />
                   </div>
                   <span>{hospitalPhone || 'Phone number unavailable'}</span>
@@ -217,38 +217,38 @@ const HospitalModal = ({ hospital, isOpen, onClose, userLocation }) => {
 
               {/* Specialties */}
               <div className="mb-8">
-                <h4 className="text-xs font-bold uppercase tracking-widest text-steel mb-4 flex items-center gap-2">
+                <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
                   <Stethoscope size={14} /> Core Specialties
                 </h4>
                 {specialties.length > 0 && specialties[0] !== 'Specialty information unavailable' ? (
                   <div className="flex flex-wrap gap-2">
                     {specialties.map((s, i) => (
-                      <span key={i} className="px-4 py-2 rounded-xl bg-fog border border-carbon-black/15 text-sm font-bold text-carbon-black">
+                      <span key={i} className="px-4 py-2 rounded-xl bg-slate-50 border border-slate-200/15 text-sm font-bold text-slate-900">
                         {s}
                       </span>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm font-bold text-steel">Specialty information unavailable</p>
+                  <p className="text-sm font-bold text-slate-500">Specialty information unavailable</p>
                 )}
               </div>
 
               {/* Available Facilities */}
               <div className="mb-8">
-                <h4 className="text-xs font-bold uppercase tracking-widest text-steel mb-4 flex items-center gap-2">
+                <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
                   <Building2 size={14} /> Available Facilities
                 </h4>
                 {facilities.length > 0 && facilities[0] !== 'Standard Care' ? (
                   <div className="grid grid-cols-2 gap-2">
                     {facilities.map((f, i) => (
-                      <div key={i} className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white border border-carbon-black/10 text-sm font-bold text-carbon-black">
-                        <div className="w-2 h-2 rounded-full bg-lime-pulse border border-carbon-black/20 shrink-0" />
+                      <div key={i} className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white border border-slate-100 text-sm font-bold text-slate-900">
+                        <div className="w-2 h-2 rounded-full bg-blue-600 border border-slate-200 shrink-0" />
                         {f}
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm font-bold text-steel">Facility information unavailable</p>
+                  <p className="text-sm font-bold text-slate-500">Facility information unavailable</p>
                 )}
               </div>
 
@@ -257,12 +257,12 @@ const HospitalModal = ({ hospital, isOpen, onClose, userLocation }) => {
                 {hasPhone ? (
                   <a 
                     href={`tel:${hospitalPhone.replace(/[^0-9+]/g, '')}`}
-                    className="flex-1 flex items-center justify-center gap-3 py-5 bg-white text-carbon-black border-2 border-carbon-black font-bold rounded-2xl uppercase tracking-widest hover:bg-fog transition-colors shadow-brutal text-sm"
+                    className="flex-1 flex items-center justify-center gap-3 py-5 bg-white text-slate-900 border border-slate-200 font-bold rounded-2xl uppercase tracking-widest hover:bg-slate-50 transition-colors shadow-md text-sm"
                   >
                     <Phone size={18} className="text-green-600" /> Call {hospitalPhone}
                   </a>
                 ) : (
-                  <div className="flex-1 flex items-center justify-center gap-3 py-5 bg-fog text-steel border border-carbon-black/20 font-bold rounded-2xl uppercase tracking-widest cursor-not-allowed text-sm" title="Phone number not available">
+                  <div className="flex-1 flex items-center justify-center gap-3 py-5 bg-slate-50 text-slate-500 border border-slate-200 font-bold rounded-2xl uppercase tracking-widest cursor-not-allowed text-sm" title="Phone number not available">
                     <Phone size={18} /> Phone Unavailable
                   </div>
                 )}
@@ -271,7 +271,7 @@ const HospitalModal = ({ hospital, isOpen, onClose, userLocation }) => {
                   href={getMapsUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-3 py-5 bg-lime-pulse text-carbon-black border-2 border-carbon-black font-bold rounded-2xl uppercase tracking-widest hover:shadow-brutal-dark transition-all shadow-brutal text-sm"
+                  className="flex-1 flex items-center justify-center gap-3 py-5 bg-blue-600 text-slate-900 border border-slate-200 font-bold rounded-2xl uppercase tracking-widest hover:shadow-md transition-all shadow-md text-sm"
                 >
                   <Navigation size={18} className="text-blue-600" /> Open Maps
                 </a>
@@ -279,7 +279,7 @@ const HospitalModal = ({ hospital, isOpen, onClose, userLocation }) => {
 
               {/* Emergency Indicator */}
               {hospital.emergency && (
-                <div className="mt-8 bg-red-50 border-2 border-red-300 rounded-xl px-6 py-4 flex items-center gap-3 shadow-brutal-sm">
+                <div className="mt-8 bg-red-50 border-2 border-red-300 rounded-xl px-6 py-4 flex items-center gap-3 shadow-sm">
                   <ShieldCheck size={18} className="text-red-500" />
                   <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">Trauma Level 1 Certified Facility</span>
                 </div>
@@ -287,7 +287,7 @@ const HospitalModal = ({ hospital, isOpen, onClose, userLocation }) => {
             </div>
 
             {/* Right side: Map */}
-            <div className="w-full md:w-1/2 h-64 md:h-auto relative bg-fog border-t md:border-t-0 md:border-l border-carbon-black/10">
+            <div className="w-full md:w-1/2 h-64 md:h-auto relative bg-slate-50 border-t md:border-t-0 md:border-l border-slate-100">
               {mapBounds ? (
                 <MapContainer 
                   key={hospital.name || hospital.id}
@@ -310,12 +310,12 @@ const HospitalModal = ({ hospital, isOpen, onClose, userLocation }) => {
                   />
                   
                   {/* Custom Map Control overlay for distance */}
-                  <div className="absolute top-4 left-4 z-[400] bg-white border border-carbon-black px-4 py-2 rounded-xl text-carbon-black font-bold text-xs uppercase tracking-widest shadow-brutal flex items-center gap-2">
+                  <div className="absolute top-4 left-4 z-[400] bg-white border border-slate-200 px-4 py-2 rounded-xl text-slate-900 font-bold text-xs uppercase tracking-widest shadow-md flex items-center gap-2">
                      <Navigation size={14} className="text-blue-600" /> {hospital.distance} Route
                   </div>
                 </MapContainer>
               ) : (
-                <div className="flex items-center justify-center w-full h-full text-steel font-bold text-sm">
+                <div className="flex items-center justify-center w-full h-full text-slate-500 font-bold text-sm">
                   Location data unavailable for map.
                 </div>
               )}

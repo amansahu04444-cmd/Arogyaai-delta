@@ -9,11 +9,11 @@ import Navbar from '../components/Navbar';
 
 const HospitalCardSkeleton = () => {
   return (
-    <div className="bg-white border border-carbon-black rounded-2xl p-6 relative overflow-hidden shadow-brutal-dark animate-pulse flex flex-col justify-between h-[280px]">
+    <div className="bg-white border border-slate-200 rounded-[24px] p-6 relative overflow-hidden shadow-md animate-pulse flex flex-col justify-between h-[280px]">
       <div className="relative z-10 flex-grow space-y-4">
         {/* Type & Rating Row */}
         <div className="flex justify-between items-center">
-          <div className="h-6 w-20 bg-steel/20 border border-carbon-black/20 rounded-full"></div>
+          <div className="h-6 w-20 bg-steel/20 border border-slate-200 rounded-full"></div>
           <div className="h-5 w-12 bg-steel/20 rounded"></div>
         </div>
 
@@ -135,7 +135,7 @@ const HospitalsPage = () => {
   };
 
   return (
-    <div className="min-h-screen text-carbon-black font-sans bg-fog pb-20 selection:bg-lime-pulse/30">
+    <div className="min-h-screen text-slate-900 font-sans bg-slate-50 pb-20 selection:bg-blue-600/30 overflow-x-hidden">
       
       <Navbar />
 
@@ -143,143 +143,168 @@ const HospitalsPage = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="pt-36 px-6 md:px-12 max-w-[1400px] mx-auto space-y-12"
+        className="pt-24 lg:pt-10 px-6 md:px-12 max-w-[1400px] mx-auto space-y-12"
       >
         {/* Header Section */}
-        <motion.div variants={itemVariants} className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-carbon-black/10 pb-10">
+        <motion.div variants={itemVariants} className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-slate-100 pb-10">
           <div>
-            <div className="flex items-center gap-3 text-carbon-black font-bold uppercase tracking-widest text-xs mb-4">
+            <div className="flex items-center gap-3 text-slate-900 font-bold uppercase tracking-widest text-xs mb-4">
               <MapPin size={16} /> Care Network
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold uppercase tracking-tight leading-none mb-4 text-carbon-black">
+            <h1 className="text-5xl md:text-7xl font-bold uppercase tracking-tight leading-none mb-4 text-slate-900">
               Recommended<br />Facilities
             </h1>
-            <p className="text-steel font-bold text-lg max-w-xl">
+            <p className="text-slate-500 font-bold text-lg max-w-xl">
               Based on your {triageResult ? triageResult.category : 'general'} analysis.
             </p>
           </div>
 
-          <div className="flex gap-4 relative" ref={filterRef}>
-            {/* Filter Button */}
-            <button 
-              onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className={`px-8 py-4 bg-white border border-carbon-black rounded-2xl font-bold uppercase tracking-widest text-xs shadow-brutal hover:shadow-brutal-dark transition-all text-carbon-black flex items-center gap-2 cursor-pointer ${isFilterOpen ? 'shadow-brutal-dark bg-fog' : ''}`}
-            >
-              <SlidersHorizontal size={14} />
-              Filter
-              {activeFilterCount > 0 && (
-                <span className="ml-1 w-5 h-5 rounded-full bg-lime-pulse border border-carbon-black text-[10px] font-bold flex items-center justify-center">
-                  {activeFilterCount}
-                </span>
-              )}
-            </button>
+          <div className="flex gap-4 items-center">
+            {/* Filter Button + Dropdown — scoped relative wrapper */}
+            <div className="relative" ref={filterRef}>
+              <button
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                className={`px-6 py-3 bg-white border border-slate-200 rounded-[24px] font-bold uppercase tracking-widest text-xs shadow-sm hover:shadow-md transition-all text-slate-900 flex items-center gap-2 cursor-pointer ${isFilterOpen ? 'shadow-md bg-slate-50' : ''}`}
+              >
+                <SlidersHorizontal size={16} />
+                Filter
+                {activeFilterCount > 0 && (
+                  <span className="ml-1 w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </button>
 
-            {/* Filter Dropdown Panel */}
-            <AnimatePresence>
-              {isFilterOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute top-full right-0 mt-3 w-80 bg-white border-2 border-carbon-black rounded-2xl shadow-brutal-dark p-6 z-50"
-                >
-                  <div className="flex items-center justify-between mb-5 border-b border-carbon-black/10 pb-3">
-                    <h4 className="font-bold uppercase tracking-widest text-xs text-carbon-black flex items-center gap-2">
-                      <Filter size={14} /> Filters
-                    </h4>
-                  </div>
-
-                  {/* Distance Filter */}
-                  <div className="mb-5">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-steel block mb-3">
-                      <Navigation size={12} className="inline mr-1.5 -mt-0.5" />
-                      Distance Limit
-                    </label>
-                    <div className="grid grid-cols-4 gap-2">
-                      {[
-                        { key: '5', label: '5 KM' },
-                        { key: '10', label: '10 KM' },
-                        { key: '15', label: '15 KM' },
-                        { key: '20', label: '20 KM' },
-                        { key: '30', label: '30 KM' },
-                        { key: '40', label: '40 KM' },
-                        { key: '50', label: '50 KM' },
-                      ].map(opt => (
-                        <button
-                          key={opt.key}
-                          onClick={() => setPendingDistance(opt.key)}
-                          className={`py-2 rounded-xl font-bold text-[10px] uppercase tracking-widest border transition-all cursor-pointer ${
-                            pendingDistance === opt.key
-                              ? 'bg-lime-pulse border-carbon-black shadow-brutal-sm text-carbon-black'
-                              : 'bg-white border-carbon-black/20 text-steel hover:border-carbon-black hover:bg-fog'
-                          }`}
-                        >
-                          {opt.label}
-                        </button>
-                      ))}
+              {/* Filter Dropdown Panel — opens leftward via right-0 */}
+              <AnimatePresence>
+                {isFilterOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                    transition={{ duration: 0.15 }}
+                    style={{ width: '360px', minWidth: '340px', maxWidth: 'calc(100vw - 32px)' }}
+                    className="absolute top-full right-0 mt-3 bg-white border border-slate-200 rounded-[20px] shadow-[0_8px_32px_rgba(0,0,0,0.10)] z-[9999] flex flex-col overflow-y-auto overflow-x-hidden"
+                  >
+                    {/* ── Header ── */}
+                    <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 shrink-0">
+                      <h4 className="text-xs font-bold uppercase tracking-widest text-slate-900 flex items-center gap-2">
+                        <Filter size={15} /> Filters
+                      </h4>
+                      <button
+                        onClick={() => setIsFilterOpen(false)}
+                        className="w-7 h-7 flex items-center justify-center rounded-[16px] text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all cursor-pointer"
+                      >
+                        <X size={15} />
+                      </button>
                     </div>
-                  </div>
 
-                  {/* Rating Filter */}
-                  <div className="mb-6">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-steel block mb-3">
-                      <ArrowUpDown size={12} className="inline mr-1.5 -mt-0.5" />
-                      Minimum Rating
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {[
-                        { key: '0', label: 'Any Rating' },
-                        { key: '4', label: '4+ Stars' },
-                        { key: '4.5', label: '4.5+ Stars' },
-                        { key: '5', label: '5.0 Stars' }
-                      ].map(opt => (
-                        <button
-                          key={opt.key}
-                          onClick={() => setPendingRating(opt.key)}
-                          className={`py-2 rounded-xl font-bold text-xs uppercase tracking-widest border transition-all cursor-pointer ${
-                            pendingRating === opt.key
-                              ? 'bg-lime-pulse border-carbon-black shadow-brutal-sm text-carbon-black'
-                              : 'bg-white border-carbon-black/20 text-steel hover:border-carbon-black hover:bg-fog'
-                          }`}
-                        >
-                          {opt.label}
-                        </button>
-                      ))}
+                    {/* ── Body ── */}
+                    <div className="flex flex-col gap-6 px-6 py-5">
+
+                      {/* Distance Filter */}
+                      <div className="flex flex-col gap-3">
+                        <div className="flex items-center gap-2">
+                          <Navigation size={14} className="text-slate-400 shrink-0" />
+                          <span className="text-[11px] font-bold uppercase tracking-widest text-slate-500">Distance Limit</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {[
+                            { key: '5',  label: '5 km'  },
+                            { key: '10', label: '10 km' },
+                            { key: '15', label: '15 km' },
+                            { key: '20', label: '20 km' },
+                            { key: '30', label: '30 km' },
+                            { key: '40', label: '40 km' },
+                            { key: '50', label: '50 km' },
+                          ].map(opt => (
+                            <button
+                              key={opt.key}
+                              onClick={() => setPendingDistance(opt.key)}
+                              className={`px-4 py-2 rounded-[16px] text-xs font-semibold border transition-all cursor-pointer whitespace-nowrap ${
+                                pendingDistance === opt.key
+                                  ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                                  : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-white'
+                              }`}
+                            >
+                              {opt.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Divider */}
+                      <div className="h-px bg-slate-100 w-full" />
+
+                      {/* Rating Filter */}
+                      <div className="flex flex-col gap-3">
+                        <div className="flex items-center gap-2">
+                          <ArrowUpDown size={14} className="text-slate-400 shrink-0" />
+                          <span className="text-[11px] font-bold uppercase tracking-widest text-slate-500">Minimum Rating</span>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                          {[
+                            { key: '0',   label: 'Any Rating'  },
+                            { key: '4',   label: '4+ Stars'    },
+                            { key: '4.5', label: '4.5+ Stars'  },
+                            { key: '5',   label: '5.0 Stars'   }
+                          ].map(opt => (
+                            <button
+                              key={opt.key}
+                              onClick={() => setPendingRating(opt.key)}
+                              className={`w-full text-left px-4 py-2.5 rounded-[16px] text-sm font-medium border transition-all cursor-pointer flex items-center gap-3 ${
+                                pendingRating === opt.key
+                                  ? 'bg-blue-50 text-blue-700 border-blue-200'
+                                  : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
+                              }`}
+                            >
+                              <span className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center ${
+                                pendingRating === opt.key ? 'border-blue-600' : 'border-slate-300'
+                              }`}>
+                                {pendingRating === opt.key && (
+                                  <span className="w-2 h-2 rounded-full bg-blue-600" />
+                                )}
+                              </span>
+                              {opt.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => {
-                        setPendingDistance('50');
-                        setPendingRating('0');
-                        setDistanceRadius('50');
-                        setRatingFilter('0');
-                        setIsFilterOpen(false);
-                      }}
-                      className="flex-1 py-3 bg-white text-carbon-black border border-carbon-black rounded-xl font-bold uppercase text-[10px] tracking-widest shadow-brutal-sm hover:-translate-y-0.5 hover:shadow-brutal active:translate-y-0 active:shadow-none transition-all cursor-pointer"
-                    >
-                      Clear Filters
-                    </button>
-                    <button
-                      onClick={() => {
-                        setDistanceRadius(pendingDistance);
-                        setRatingFilter(pendingRating);
-                        setIsFilterOpen(false);
-                      }}
-                      className="flex-1 py-3 bg-lime-pulse text-carbon-black border border-carbon-black rounded-xl font-bold uppercase text-[10px] tracking-widest shadow-brutal-sm hover:-translate-y-0.5 hover:shadow-brutal active:translate-y-0 active:shadow-none transition-all cursor-pointer"
-                    >
-                      Apply Filters
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                    {/* ── Footer ── */}
+                    <div className="flex gap-3 px-6 py-4 border-t border-slate-100 shrink-0">
+                      <button
+                        onClick={() => {
+                          setPendingDistance('50');
+                          setPendingRating('0');
+                          setDistanceRadius('50');
+                          setRatingFilter('0');
+                          setIsFilterOpen(false);
+                        }}
+                        className="flex-1 py-3 bg-white text-slate-700 border border-slate-200 rounded-[16px] text-sm font-semibold hover:bg-slate-50 transition-all cursor-pointer text-center"
+                      >
+                        Clear Filters
+                      </button>
+                      <button
+                        onClick={() => {
+                          setDistanceRadius(pendingDistance);
+                          setRatingFilter(pendingRating);
+                          setIsFilterOpen(false);
+                        }}
+                        className="flex-1 py-3 bg-blue-600 text-white border border-blue-600 rounded-[16px] text-sm font-semibold hover:bg-blue-700 transition-all cursor-pointer shadow-[0_4px_14px_rgba(37,99,235,0.25)] text-center"
+                      >
+                        Apply Filters
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
-            <button 
+            <button
               onClick={() => navigate('/map')}
-              className="px-8 py-4 bg-lime-pulse border border-carbon-black text-carbon-black rounded-2xl font-bold uppercase tracking-widest text-xs shadow-brutal hover:shadow-brutal-dark transition-all cursor-pointer"
+              className="px-6 py-3 bg-blue-600 text-white rounded-[24px] font-bold uppercase tracking-widest text-xs shadow-sm hover:bg-blue-700 transition-all cursor-pointer"
             >
               Map View
             </button>
@@ -289,7 +314,7 @@ const HospitalsPage = () => {
         {/* Content Section */}
         {isLoading ? (
           <div className="space-y-6">
-            <div className="text-sm font-bold text-steel tracking-wider animate-pulse">
+            <div className="text-sm font-bold text-slate-500 tracking-wider animate-pulse">
               Locating nearby healthcare facilities...
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -303,14 +328,14 @@ const HospitalsPage = () => {
             variants={itemVariants}
             className="flex flex-col items-center justify-center py-20 text-center space-y-8"
           >
-            <div className="w-32 h-32 bg-white rounded-[20px] flex items-center justify-center border border-carbon-black shadow-brutal-sm">
-              <Search size={48} className="text-steel" />
+            <div className="w-32 h-32 bg-white rounded-[24px] flex items-center justify-center border border-slate-200 shadow-sm">
+              <Search size={48} className="text-slate-500" />
             </div>
             <div>
-              <h3 className="text-3xl font-bold uppercase tracking-tight mb-2 text-carbon-black">
+              <h3 className="text-3xl font-bold uppercase tracking-tight mb-2 text-slate-900">
                 {recommendedHospitals.length > 0 ? 'No matches for filters' : 'No facilities found'}
               </h3>
-              <p className="text-steel font-bold max-w-md mx-auto">
+              <p className="text-slate-500 font-bold max-w-md mx-auto">
                 {recommendedHospitals.length > 0
                   ? 'Try adjusting the distance limit or minimum rating.'
                   : triageResult
@@ -327,14 +352,14 @@ const HospitalsPage = () => {
                   setPendingDistance('50');
                   setPendingRating('0');
                 }}
-                className="px-10 py-5 bg-white text-carbon-black border border-carbon-black rounded-2xl font-bold uppercase tracking-widest shadow-brutal hover:-translate-y-1 hover:shadow-brutal-dark active:translate-y-1 active:shadow-none transition-all cursor-pointer"
+                className="px-10 py-5 bg-white text-slate-900 border border-slate-200 rounded-[24px] font-bold uppercase tracking-widest shadow-md hover:-translate-y-1 hover:shadow-md active:translate-y-1 active:shadow-none transition-all cursor-pointer"
               >
                 Clear Filters
               </button>
             ) : (
               <button 
                 onClick={() => navigate('/dashboard')}
-                className="px-10 py-5 bg-lime-pulse text-carbon-black border border-carbon-black rounded-2xl font-bold uppercase tracking-widest shadow-brutal hover:-translate-y-1 hover:shadow-brutal-dark active:translate-y-1 active:shadow-none transition-all cursor-pointer"
+                className="px-10 py-5 bg-blue-600 text-slate-900 border border-slate-200 rounded-[24px] font-bold uppercase tracking-widest shadow-md hover:-translate-y-1 hover:shadow-md active:translate-y-1 active:shadow-none transition-all cursor-pointer"
               >
                 Start Consultation
               </button>
@@ -342,7 +367,7 @@ const HospitalsPage = () => {
           </motion.div>
         ) : (
           <div className="space-y-6">
-            <div className="text-sm font-bold text-steel tracking-wider">
+            <div className="text-sm font-bold text-slate-500 tracking-wider">
               Showing {processedHospitals.length} hospitals within {distanceRadius} KM
               {ratingFilter !== '0' ? ` with ${ratingFilter}+ stars` : ''}
             </div>

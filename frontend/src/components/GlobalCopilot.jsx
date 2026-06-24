@@ -289,7 +289,7 @@ const GlobalCopilot = () => {
     const parts = text.split(/(\*\*.*?\*\*)/g);
     return parts.map((part, index) => {
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={index} className="font-extrabold text-carbon-black">{part.slice(2, -2)}</strong>;
+        return <strong key={index} className="font-extrabold text-slate-900">{part.slice(2, -2)}</strong>;
       }
       return <span key={index}>{part}</span>;
     });
@@ -305,27 +305,27 @@ const GlobalCopilot = () => {
   const renderHospitalCards = (hospitals) => {
     return (
       <div className="mt-4 space-y-4">
-        <h4 className="font-bold text-carbon-black text-sm mb-3">🏥 Nearby Hospitals</h4>
+        <h4 className="font-bold text-slate-900 text-sm mb-3">🏥 Nearby Hospitals</h4>
         {hospitals.map((hospital, idx) => (
-          <div key={idx} className="border-2 border-carbon-black p-5 rounded-xl bg-white shadow-brutal hover:shadow-none hover:translate-y-1 transition-all">
-            <h5 className="font-black text-lg text-carbon-black mb-3">{hospital.name}</h5>
-            {hospital.rating && <p className="text-sm text-carbon-black font-bold mb-3 flex items-center gap-2">⭐ {hospital.rating}</p>}
-            <p className="text-sm text-carbon-black font-medium mb-4 flex items-start gap-2">
+          <div key={idx} className="border border-slate-200 p-5 rounded-[16px] bg-white shadow-md hover:shadow-none hover:translate-y-1 transition-all">
+            <h5 className="font-black text-lg text-slate-900 mb-3">{hospital.name}</h5>
+            {hospital.rating && <p className="text-sm text-slate-900 font-bold mb-3 flex items-center gap-2">⭐ {hospital.rating}</p>}
+            <p className="text-sm text-slate-900 font-medium mb-4 flex items-start gap-2">
               <span>📍</span> 
               <span>{hospital.address || 'Address not available'}</span>
             </p>
-            {hospital.distance && <p className="text-sm text-carbon-black font-medium mb-4 flex items-center gap-2">📏 {hospital.distance.toFixed(1)} km</p>}
+            {hospital.distance && <p className="text-sm text-slate-900 font-medium mb-4 flex items-center gap-2">📏 {hospital.distance.toFixed(1)} km</p>}
             <div className="flex gap-2 mt-2">
               <button
                 onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hospital.name + " " + hospital.address)}`, '_blank')}
-                className="flex-1 bg-white hover:bg-fog text-carbon-black border-2 border-carbon-black px-4 py-3 rounded-md font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-brutal-sm active:translate-y-0.5 active:shadow-none"
+                className="flex-1 bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 px-4 py-3 rounded-md font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-sm active:translate-y-0.5 active:shadow-none"
               >
                 Directions
               </button>
               {hospital.phone && (
                 <button
                   onClick={() => window.location.href = `tel:${hospital.phone}`}
-                  className="flex-1 bg-carbon-black hover:bg-carbon-black/90 text-white border-2 border-carbon-black px-4 py-3 rounded-md font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-brutal-sm active:translate-y-0.5 active:shadow-none"
+                  className="flex-1 bg-slate-800 hover:bg-slate-800/90 text-white border border-slate-200 px-4 py-3 rounded-md font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-sm active:translate-y-0.5 active:shadow-none"
                 >
                   Call
                 </button>
@@ -338,20 +338,20 @@ const GlobalCopilot = () => {
   };
 
   const renderHealthSummary = (triageData) => {
-    if (!triageData || !triageData.score) return <div className="mt-4 p-4 border-2 border-carbon-black rounded-xl bg-white text-carbon-black text-sm font-bold shadow-brutal-sm">No health summary data available.</div>;
+    if (!triageData || !triageData.score) return <div className="mt-4 p-4 border border-slate-200 rounded-[16px] bg-white text-slate-900 text-sm font-bold shadow-sm">No health summary data available.</div>;
     return (
-      <div className="mt-4 border-2 border-carbon-black p-5 rounded-xl bg-[#f4fae6] shadow-brutal text-carbon-black">
-        <h4 className="font-bold text-sm mb-4 uppercase tracking-wider border-b-2 border-carbon-black/10 pb-2">Health Summary</h4>
+      <div className="mt-4 border border-slate-200 p-5 rounded-[16px] bg-[#f4fae6] shadow-md text-slate-900">
+        <h4 className="font-bold text-sm mb-4 uppercase tracking-wider border-b-2 border-slate-100 pb-2">Health Summary</h4>
         <div className="flex flex-col gap-3">
-          <div className="flex justify-between items-center bg-white p-3 border-2 border-carbon-black rounded-lg">
+          <div className="flex justify-between items-center bg-white p-3 border border-slate-200 rounded-[16px]">
             <span className="font-bold text-sm">Risk Score</span>
             <span className="font-black text-xl">{triageData.score || 'N/A'}/10</span>
           </div>
-          <div className="flex justify-between items-center bg-white p-3 border-2 border-carbon-black rounded-lg">
+          <div className="flex justify-between items-center bg-white p-3 border border-slate-200 rounded-[16px]">
             <span className="font-bold text-sm">Risk Level</span>
             <span className="font-black text-xl">{triageData.category || 'UNKNOWN'}</span>
           </div>
-          <div className="flex justify-between items-center bg-white p-3 border-2 border-carbon-black rounded-lg">
+          <div className="flex justify-between items-center bg-white p-3 border border-slate-200 rounded-[16px]">
             <span className="font-bold text-sm">Symptoms</span>
             <span className="font-bold">{triageData.symptoms?.length || 0} Active</span>
           </div>
@@ -361,18 +361,18 @@ const GlobalCopilot = () => {
   };
 
   const renderTimeline = (timelineData) => {
-    if (!timelineData?.entries || timelineData.entries.length === 0) return <div className="mt-4 p-4 border-2 border-carbon-black rounded-xl bg-white text-carbon-black text-sm font-bold shadow-brutal-sm">No timeline entries available.</div>;
+    if (!timelineData?.entries || timelineData.entries.length === 0) return <div className="mt-4 p-4 border border-slate-200 rounded-[16px] bg-white text-slate-900 text-sm font-bold shadow-sm">No timeline entries available.</div>;
     return (
-      <div className="mt-4 space-y-4 p-5 border-2 border-carbon-black rounded-xl bg-sky-wash shadow-brutal">
-        <h4 className="font-bold text-carbon-black text-sm mb-3">📋 Symptom Timeline</h4>
-        <div className="pl-4 border-l-4 border-carbon-black space-y-6">
+      <div className="mt-4 space-y-4 p-5 border border-slate-200 rounded-[16px] bg-slate-50 shadow-md">
+        <h4 className="font-bold text-slate-900 text-sm mb-3">📋 Symptom Timeline</h4>
+        <div className="pl-4 border-l-4 border-slate-200 space-y-6">
           {timelineData.entries.slice(-5).map((entry, idx) => (
             <div key={idx} className="relative">
-              <div className="absolute -left-[26px] top-0 w-4 h-4 rounded-full border-2 border-carbon-black bg-white" />
-              <div className="bg-white border-2 border-carbon-black p-4 rounded-xl shadow-brutal-sm">
-                <p className="text-xs font-bold text-steel mb-2">{entry.date}</p>
+              <div className="absolute -left-[26px] top-0 w-4 h-4 rounded-full border border-slate-200 bg-white" />
+              <div className="bg-white border border-slate-200 p-4 rounded-[16px] shadow-sm">
+                <p className="text-xs font-bold text-slate-500 mb-2">{entry.date}</p>
                 <p className="font-black text-sm mb-2">{entry.symptoms}</p>
-                <span className={`inline-block px-3 py-1 text-xs font-bold rounded-md border-2 border-carbon-black ${entry.risk_level === 'High' ? 'bg-red-400 text-white' : entry.risk_level === 'Medium' ? 'bg-yellow-400' : 'bg-lime-pulse'}`}>
+                <span className={`inline-block px-3 py-1 text-xs font-bold rounded-md border border-slate-200 ${entry.risk_level === 'High' ? 'bg-red-400 text-white' : entry.risk_level === 'Medium' ? 'bg-yellow-400' : 'bg-blue-600'}`}>
                   {entry.risk_level} Risk
                 </span>
               </div>
@@ -384,16 +384,16 @@ const GlobalCopilot = () => {
   };
 
   const renderDoctorSummary = (summaryData) => {
-    if (!summaryData || !summaryData.patientInfo) return <div className="mt-4 p-4 border-2 border-carbon-black rounded-xl bg-white text-carbon-black text-sm font-bold shadow-brutal-sm">No doctor summary available.</div>;
+    if (!summaryData || !summaryData.patientInfo) return <div className="mt-4 p-4 border border-slate-200 rounded-[16px] bg-white text-slate-900 text-sm font-bold shadow-sm">No doctor summary available.</div>;
     return (
-      <div className="mt-4 bg-white border-2 border-carbon-black rounded-xl shadow-brutal overflow-hidden">
-        <div className="bg-white border-b-2 border-carbon-black p-4">
-          <h4 className="font-black text-lg text-carbon-black">Doctor Consultation Card</h4>
-          <p className="text-xs font-bold text-steel mt-1">Patient: {summaryData.patientInfo?.name}</p>
+      <div className="mt-4 bg-white border border-slate-200 rounded-[16px] shadow-md overflow-hidden">
+        <div className="bg-white border-b-2 border-slate-200 p-4">
+          <h4 className="font-black text-lg text-slate-900">Doctor Consultation Card</h4>
+          <p className="text-xs font-bold text-slate-500 mt-1">Patient: {summaryData.patientInfo?.name}</p>
         </div>
         <div className="p-5 space-y-4">
-          <details className="group border-2 border-carbon-black rounded-lg bg-white overflow-hidden" open>
-            <summary className="font-bold text-sm uppercase text-carbon-black p-3 bg-fog cursor-pointer select-none border-b-2 border-transparent group-open:border-carbon-black">
+          <details className="group border border-slate-200 rounded-[16px] bg-white overflow-hidden" open>
+            <summary className="font-bold text-sm uppercase text-slate-900 p-3 bg-slate-50 cursor-pointer select-none border-b-2 border-transparent group-open:border-slate-200">
               Timeline Summary
             </summary>
             <div className="p-4 text-sm font-medium">
@@ -402,8 +402,8 @@ const GlobalCopilot = () => {
           </details>
 
           {summaryData.latestTriage && (
-            <details className="group border-2 border-carbon-black rounded-lg bg-white overflow-hidden" open>
-              <summary className="font-bold text-sm uppercase text-carbon-black p-3 bg-red-50 cursor-pointer select-none border-b-2 border-transparent group-open:border-carbon-black">
+            <details className="group border border-slate-200 rounded-[16px] bg-white overflow-hidden" open>
+              <summary className="font-bold text-sm uppercase text-slate-900 p-3 bg-red-50 cursor-pointer select-none border-b-2 border-transparent group-open:border-slate-200">
                 Risk Assessment
               </summary>
               <div className="p-4 font-bold text-sm text-red-700">
@@ -412,22 +412,22 @@ const GlobalCopilot = () => {
             </details>
           )}
 
-          <details className="group border-2 border-carbon-black rounded-lg bg-white overflow-hidden" open>
-            <summary className="font-bold text-sm uppercase text-carbon-black p-3 bg-fog cursor-pointer select-none border-b-2 border-transparent group-open:border-carbon-black">
+          <details className="group border border-slate-200 rounded-[16px] bg-white overflow-hidden" open>
+            <summary className="font-bold text-sm uppercase text-slate-900 p-3 bg-slate-50 cursor-pointer select-none border-b-2 border-transparent group-open:border-slate-200">
               Medical History
             </summary>
             <div className="p-4 flex flex-wrap gap-2">
               {summaryData.medicalHistory?.conditions?.map((c, i) => (
-                <span key={i} className="px-3 py-1 bg-white border-2 border-carbon-black rounded-full text-xs font-bold">{c}</span>
+                <span key={i} className="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-bold">{c}</span>
               ))}
-              {!summaryData.medicalHistory?.conditions?.length && <span className="text-sm text-steel">None reported</span>}
+              {!summaryData.medicalHistory?.conditions?.length && <span className="text-sm text-slate-500">None reported</span>}
             </div>
           </details>
 
           <button 
             type="button"
             onClick={handleExportPdf}
-            className="w-full mt-2 bg-white hover:bg-fog text-carbon-black border-2 border-carbon-black px-4 py-3 rounded-md font-bold text-xs uppercase tracking-wider transition-all shadow-brutal-sm active:translate-y-0.5 active:shadow-none"
+            className="w-full mt-2 bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 px-4 py-3 rounded-md font-bold text-xs uppercase tracking-wider transition-all shadow-sm active:translate-y-0.5 active:shadow-none"
           >
             Export to PDF
           </button>
@@ -437,26 +437,26 @@ const GlobalCopilot = () => {
   };
 
   const renderQR = (qrData) => {
-    if (!qrData || !qrData.blood_type) return <div className="mt-4 p-4 border-2 border-carbon-black rounded-xl bg-white text-carbon-black text-sm font-bold shadow-brutal-sm">No Medical QR data available.</div>;
+    if (!qrData || !qrData.blood_type) return <div className="mt-4 p-4 border border-slate-200 rounded-[16px] bg-white text-slate-900 text-sm font-bold shadow-sm">No Medical QR data available.</div>;
     return (
-      <div className="mt-4 bg-cyan-50 border-2 border-carbon-black rounded-xl shadow-brutal p-5 text-center">
-        <h4 className="font-black text-lg mb-4 text-carbon-black">Medical Identity Card</h4>
-        <div className="bg-white p-4 rounded-lg border-2 border-carbon-black mb-4 mx-auto w-32 h-32 flex items-center justify-center">
+      <div className="mt-4 bg-cyan-50 border border-slate-200 rounded-[16px] shadow-md p-5 text-center">
+        <h4 className="font-black text-lg mb-4 text-slate-900">Medical Identity Card</h4>
+        <div className="bg-white p-4 rounded-[16px] border border-slate-200 mb-4 mx-auto w-32 h-32 flex items-center justify-center">
           <span className="text-4xl">🪪</span>
         </div>
         <div className="grid grid-cols-2 gap-3 text-left mb-4">
-          <div className="border border-carbon-black/20 bg-white p-2 rounded">
-            <p className="text-xs text-steel font-bold uppercase">Blood Group</p>
-            <p className="font-black text-carbon-black">{qrData.blood_type || 'N/A'}</p>
+          <div className="border border-slate-200 bg-white p-2 rounded">
+            <p className="text-xs text-slate-500 font-bold uppercase">Blood Group</p>
+            <p className="font-black text-slate-900">{qrData.blood_type || 'N/A'}</p>
           </div>
-          <div className="border border-carbon-black/20 bg-white p-2 rounded">
-            <p className="text-xs text-steel font-bold uppercase">Age</p>
-            <p className="font-black text-carbon-black">{qrData.age || 'N/A'}</p>
+          <div className="border border-slate-200 bg-white p-2 rounded">
+            <p className="text-xs text-slate-500 font-bold uppercase">Age</p>
+            <p className="font-black text-slate-900">{qrData.age || 'N/A'}</p>
           </div>
         </div>
         <div className="flex gap-2">
-          <button className="flex-1 bg-white hover:bg-fog text-carbon-black border-2 border-carbon-black px-3 py-2 rounded font-bold text-xs shadow-brutal-sm active:translate-y-0.5 active:shadow-none transition-all">View QR</button>
-          <button className="flex-1 bg-carbon-black text-white px-3 py-2 rounded font-bold text-xs shadow-brutal-sm active:translate-y-0.5 active:shadow-none transition-all">Download</button>
+          <button className="flex-1 bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 px-3 py-2 rounded font-bold text-xs shadow-sm active:translate-y-0.5 active:shadow-none transition-all">View QR</button>
+          <button className="flex-1 bg-slate-800 text-white px-3 py-2 rounded font-bold text-xs shadow-sm active:translate-y-0.5 active:shadow-none transition-all">Download</button>
         </div>
       </div>
     );
@@ -464,7 +464,7 @@ const GlobalCopilot = () => {
 
   const renderInsights = (insightsData) => {
     if (!insightsData || !insightsData.analysis) {
-      return <div className="mt-4 p-4 border-2 border-carbon-black rounded-xl bg-white text-carbon-black text-sm font-bold shadow-brutal-sm">No meaningful trends detected yet.</div>;
+      return <div className="mt-4 p-4 border border-slate-200 rounded-[16px] bg-white text-slate-900 text-sm font-bold shadow-sm">No meaningful trends detected yet.</div>;
     }
 
     const cards = [];
@@ -492,18 +492,18 @@ const GlobalCopilot = () => {
     }
 
     if (cards.length === 0) {
-      return <div className="mt-4 p-4 border-2 border-carbon-black rounded-xl bg-white text-carbon-black text-sm font-bold shadow-brutal-sm">No meaningful trends detected yet.</div>;
+      return <div className="mt-4 p-4 border border-slate-200 rounded-[16px] bg-white text-slate-900 text-sm font-bold shadow-sm">No meaningful trends detected yet.</div>;
     }
 
     return (
-      <div className="mt-4 space-y-4 p-5 rounded-xl border-2 border-carbon-black bg-blue-50 shadow-brutal text-carbon-black">
+      <div className="mt-4 space-y-4 p-5 rounded-[16px] border border-slate-200 bg-blue-50 shadow-md text-slate-900">
         <h4 className="font-bold text-sm mb-2 uppercase tracking-wider">📈 Health Insights</h4>
         {cards.map((card, idx) => (
-          <div key={idx} className={`p-4 rounded-xl border-2 border-carbon-black ${card.bgClass} shadow-brutal-sm`}>
+          <div key={idx} className={`p-4 rounded-[16px] border border-slate-200 ${card.bgClass} shadow-sm`}>
             <div className="font-black text-sm mb-1 flex items-center gap-2">
               <span>{card.icon}</span> {card.title}
             </div>
-            <div className="text-sm font-medium text-carbon-black">{card.message}</div>
+            <div className="text-sm font-medium text-slate-900">{card.message}</div>
           </div>
         ))}
       </div>
@@ -511,16 +511,16 @@ const GlobalCopilot = () => {
   };
 
   const renderReports = (reportsData) => {
-    if (!reportsData || !reportsData.length) return <div className="mt-4 p-4 border-2 border-carbon-black rounded-xl bg-white text-carbon-black text-sm font-bold shadow-brutal-sm">No medical reports available.</div>;
+    if (!reportsData || !reportsData.length) return <div className="mt-4 p-4 border border-slate-200 rounded-[16px] bg-white text-slate-900 text-sm font-bold shadow-sm">No medical reports available.</div>;
     return (
-      <div className="mt-4 space-y-3 p-5 border-2 border-carbon-black rounded-xl bg-white shadow-brutal">
-        <h4 className="font-bold text-carbon-black text-sm mb-3">📋 Medical Reports</h4>
+      <div className="mt-4 space-y-3 p-5 border border-slate-200 rounded-[16px] bg-white shadow-md">
+        <h4 className="font-bold text-slate-900 text-sm mb-3">📋 Medical Reports</h4>
         {reportsData.map((report, idx) => (
-          <div key={idx} className="bg-fog border-2 border-carbon-black p-4 rounded-xl shadow-brutal-sm">
-            <p className="text-xs font-bold text-steel mb-1">{report.date}</p>
-            <h5 className="font-black text-sm mb-2 text-carbon-black">{report.title}</h5>
-            <p className="text-xs text-carbon-black font-medium mb-3">{report.summary}</p>
-            <button className="text-xs font-bold underline text-carbon-black">View Report</button>
+          <div key={idx} className="bg-slate-50 border border-slate-200 p-4 rounded-[16px] shadow-sm">
+            <p className="text-xs font-bold text-slate-500 mb-1">{report.date}</p>
+            <h5 className="font-black text-sm mb-2 text-slate-900">{report.title}</h5>
+            <p className="text-xs text-slate-900 font-medium mb-3">{report.summary}</p>
+            <button className="text-xs font-bold underline text-slate-900">View Report</button>
           </div>
         ))}
       </div>
@@ -598,56 +598,31 @@ const GlobalCopilot = () => {
 
   return (
     <>
-      {/* Floating Action Buttons Stack */}
+      {/* NEW PROFESSIONAL FLOATING ACTION BUTTONS */}
       {!isOpen && (
-        <div className="fixed right-4 bottom-4 md:right-6 md:bottom-6 z-[10005] flex flex-col gap-4 md:gap-[22px] pointer-events-none">
-          {/* Emergency SOS Button */}
-          <div className="group relative flex items-center justify-end pointer-events-auto">
-            <div className="absolute right-20 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:translate-x-0 group-hover:scale-100 translate-x-2 scale-95 transition-all duration-200 ease-out bg-white border-2 border-carbon-black text-carbon-black font-black text-xs uppercase tracking-wide py-2 px-3.5 rounded-xl whitespace-nowrap shadow-brutal-sm">
-              Emergency SOS
-            </div>
-            <motion.button
-              onClick={() => setIsEmergencyModalOpen(true)}
-              className="relative w-16 h-16 rounded-full border-2 border-carbon-black bg-red-600 flex items-center justify-center cursor-pointer text-white focus:outline-none shadow-[3px_3px_0px_#000000]"
-              whileHover={{
-                scale: 1.08,
-                boxShadow: "5px 5px 0px #000000, 0 0 20px rgba(220,38,38,0.7)"
-              }}
-              whileTap={{
-                scale: 0.95,
-                boxShadow: "1px 1px 0px #000000"
-              }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >
-              {/* Background SOS sonar pulse */}
-              <div className="absolute inset-0 rounded-full bg-red-600/30 animate-ping pointer-events-none z-[-1] [animation-duration:3s]" />
-              <Siren size={30} className="stroke-[2.25]" />
-            </motion.button>
-          </div>
+        <div className="fixed bottom-6 right-6 z-[10005] flex flex-col gap-4 pointer-events-auto">
+          {/* AI Copilot Button */}
+          <motion.button
+            onClick={() => setIsOpen(true)}
+            className="w-[56px] h-[56px] rounded-full bg-blue-600 flex items-center justify-center cursor-pointer text-white shadow-[0_8px_24px_rgb(37,99,235,0.3)] hover:bg-blue-700 hover:shadow-[0_12px_30px_rgb(37,99,235,0.4)] transition-all"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            title="AI Health Copilot"
+          >
+            <Bot size={28} className="stroke-[2]" />
+          </motion.button>
 
-          {/* AI Health Copilot Button */}
-          <div className="group relative flex items-center justify-end pointer-events-auto">
-            <div className="absolute right-20 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:translate-x-0 group-hover:scale-100 translate-x-2 scale-95 transition-all duration-200 ease-out bg-white border-2 border-carbon-black text-carbon-black font-black text-xs uppercase tracking-wide py-2 px-3.5 rounded-xl whitespace-nowrap shadow-brutal-sm">
-              AI Health Copilot
-            </div>
-            <motion.button
-              onClick={() => setIsOpen(true)}
-              className="relative w-16 h-16 rounded-full border-2 border-carbon-black bg-lime-pulse flex items-center justify-center cursor-pointer text-carbon-black focus:outline-none shadow-[3px_3px_0px_#000000]"
-              whileHover={{
-                scale: 1.08,
-                boxShadow: "5px 5px 0px #000000, 0 0 20px rgba(163,230,53,0.7)"
-              }}
-              whileTap={{
-                scale: 0.95,
-                boxShadow: "1px 1px 0px #000000"
-              }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >
-              {/* Background AI ping pulse */}
-              <div className="absolute inset-0 rounded-full bg-lime-pulse/45 animate-ping pointer-events-none z-[-1] [animation-duration:4s]" />
-              <Bot size={30} className="stroke-[2.25]" />
-            </motion.button>
-          </div>
+          {/* Emergency Button */}
+          <motion.button
+            onClick={() => setIsEmergencyModalOpen(true)}
+            className="w-[56px] h-[56px] rounded-full bg-red-600 flex items-center justify-center cursor-pointer text-white shadow-[0_8px_24px_rgb(220,38,38,0.3)] hover:bg-red-700 hover:shadow-[0_12px_30px_rgb(220,38,38,0.5)] transition-all relative"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            title="Emergency SOS"
+          >
+            <div className="absolute inset-0 rounded-full bg-red-500/20 blur-md pointer-events-none" />
+            <Siren size={28} className="stroke-[2] relative z-10" />
+          </motion.button>
         </div>
       )}
 
@@ -670,29 +645,29 @@ const GlobalCopilot = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className="relative w-full md:w-[460px] bg-white border-l-2 border-carbon-black h-full flex flex-col shadow-brutal-dark z-[10002] text-carbon-black"
+              className="relative w-full md:w-[460px] bg-white border-l-2 border-slate-200 h-full flex flex-col shadow-md z-[10002] text-slate-900"
             >
               {/* Header */}
-              <div className="p-6 border-b border-carbon-black/10 flex justify-between items-center bg-sky-wash">
+              <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                 <div>
-                  <h3 className="text-2xl font-black uppercase tracking-tight flex items-center gap-2 text-carbon-black">
+                  <h3 className="text-2xl font-black uppercase tracking-tight flex items-center gap-2 text-slate-900">
                     <Bot className="text-blue-600" size={28} /> AI Health Copilot
                   </h3>
-                  <p className="text-[10px] font-black text-steel uppercase tracking-widest mt-1">
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">
                     Your personal healthcare assistant
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleResetCopilot}
-                    className="p-2 border border-carbon-black rounded-lg shadow-brutal-sm hover:bg-fog active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+                    className="p-2 border border-slate-200 rounded-[16px] shadow-sm hover:bg-slate-50 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
                     title="Reset Copilot Session"
                   >
                     <RefreshCw size={14} className={!contextLoaded ? "animate-spin" : ""} />
                   </button>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="p-2.5 border border-carbon-black rounded-lg shadow-brutal-sm hover:bg-fog active:translate-y-0.5 active:shadow-none transition-all cursor-pointer bg-white"
+                    className="p-2.5 border border-slate-200 rounded-[16px] shadow-sm hover:bg-slate-50 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer bg-white"
                     title="Close Copilot"
                   >
                     <X size={14} />
@@ -701,14 +676,14 @@ const GlobalCopilot = () => {
               </div>
 
               {/* Chat Thread */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-fog/20 custom-scrollbar">
+              <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50/20 custom-scrollbar">
                 {messages.length === 1 && (
-                  <div className="flex flex-col items-center justify-center py-10 text-center space-y-4 bg-white border border-carbon-black/10 rounded-2xl p-6 shadow-sm mb-4">
-                    <div className="w-16 h-16 rounded-2xl bg-sky-wash border border-carbon-black flex items-center justify-center shadow-brutal-sm">
+                  <div className="flex flex-col items-center justify-center py-10 text-center space-y-4 bg-white border border-slate-100 rounded-[24px] p-6 shadow-sm mb-4">
+                    <div className="w-16 h-16 rounded-[24px] bg-slate-50 border border-slate-200 flex items-center justify-center shadow-sm">
                       <Bot size={36} className="text-blue-600 animate-bounce" />
                     </div>
-                    <h4 className="text-lg font-bold uppercase tracking-tight text-carbon-black">AI Health Copilot</h4>
-                    <p className="text-xs font-semibold text-steel max-w-[280px] leading-relaxed">
+                    <h4 className="text-lg font-bold uppercase tracking-tight text-slate-900">AI Health Copilot</h4>
+                    <p className="text-xs font-semibold text-slate-500 max-w-[280px] leading-relaxed">
                       Ask questions about your symptom history, reports, hospitals, or health timeline.
                     </p>
                   </div>
@@ -719,31 +694,31 @@ const GlobalCopilot = () => {
                     className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
-                      className={`max-w-[85%] p-4 rounded-2xl border text-xs leading-relaxed ${
+                      className={`max-w-[85%] p-4 rounded-[24px] border text-xs leading-relaxed break-words whitespace-normal ${
                         m.role === 'user'
-                          ? 'bg-lime-pulse text-carbon-black border-carbon-black shadow-brutal-sm'
-                          : 'bg-white text-carbon-black border-carbon-black/15 shadow-sm'
+                          ? 'bg-blue-600 text-slate-900 border-slate-200 shadow-sm'
+                          : 'bg-white text-slate-900 border-slate-200/15 shadow-sm'
                       }`}
                     >
-                      <div className="flex items-center gap-1.5 mb-1 text-[9px] font-bold uppercase tracking-wider text-steel">
+                      <div className="flex items-center gap-1.5 mb-1 text-[9px] font-bold uppercase tracking-wider text-slate-500">
                         {m.role === 'user' ? '👤 Patient Query' : '🤖 Copilot Clinical Reasoner'}
                       </div>
-                      <p className="whitespace-pre-line font-semibold">{renderMarkdownBold(m.content)}</p>
+                      <p className="whitespace-pre-line font-semibold break-words">{renderMarkdownBold(m.content)}</p>
                       
                       {m.type === 'pdf_ready' && m.downloadUrl && (
-                        <div className="mt-4 border-2 border-carbon-black p-5 rounded-xl bg-white shadow-brutal text-center">
-                          <div className="bg-lime-pulse mx-auto w-16 h-16 rounded-full border-2 border-carbon-black flex items-center justify-center mb-3">
+                        <div className="mt-4 border border-slate-200 p-5 rounded-[16px] bg-white shadow-md text-center">
+                          <div className="bg-blue-600 mx-auto w-16 h-16 rounded-full border border-slate-200 flex items-center justify-center mb-3">
                             <span className="text-2xl">📄</span>
                           </div>
                           <h5 className="font-black text-lg mb-2">Medical Report Ready</h5>
-                          <div className="text-xs text-carbon-black font-medium space-y-1 mb-4">
+                          <div className="text-xs text-slate-900 font-medium space-y-1 mb-4">
                             <p>✅ Timeline Included</p>
                             <p>✅ Reports Included</p>
                             <p>✅ Summary Included</p>
                           </div>
                           <button 
                             onClick={() => downloadFile(m.downloadUrl)}
-                            className="bg-carbon-black hover:bg-carbon-black/90 text-white px-4 py-3 rounded-lg font-bold text-xs uppercase tracking-wider w-full shadow-brutal-sm active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+                            className="bg-slate-800 hover:bg-slate-800/90 text-white px-4 py-3 rounded-[16px] font-bold text-xs uppercase tracking-wider w-full shadow-sm active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
                           >
                             Download PDF
                           </button>
@@ -760,15 +735,15 @@ const GlobalCopilot = () => {
                       {m.type === 'reports' && renderReports(m.reportsData)}
 
                       {m.type === 'emergency_panel' && m.emergencyData && (
-                        <div className="mt-4 border-2 border-carbon-black p-5 rounded-xl bg-red-50 shadow-brutal">
+                        <div className="mt-4 border border-slate-200 p-5 rounded-[16px] bg-red-50 shadow-md">
                           <div className="flex items-center gap-3 mb-4">
-                            <div className="bg-red-600 text-white p-2 rounded-lg border-2 border-carbon-black font-black">SOS</div>
+                            <div className="bg-red-600 text-white p-2 rounded-[16px] border border-slate-200 font-black">SOS</div>
                             <h5 className="font-black text-red-600 text-lg tracking-tight">Emergency Action Panel</h5>
                           </div>
                           <div className="grid grid-cols-2 gap-3">
                             <button
                               onClick={() => handleEmergencyTrigger('general')}
-                              className="col-span-2 bg-red-600 text-white hover:bg-red-700 p-4 rounded-xl border-2 border-carbon-black font-black text-sm uppercase tracking-wider shadow-brutal-sm active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-2"
+                              className="col-span-2 bg-red-600 text-white hover:bg-red-700 p-4 rounded-[16px] border border-slate-200 font-black text-sm uppercase tracking-wider shadow-sm active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-2"
                             >
                               🚨 Telegram SOS
                             </button>
@@ -776,7 +751,7 @@ const GlobalCopilot = () => {
                             {m.emergencyData.primaryContact && (
                               <button
                                 onClick={() => window.location.href = `tel:${m.emergencyData.primaryContact.phone}`}
-                                className="bg-white hover:bg-fog text-carbon-black p-3 rounded-lg border-2 border-carbon-black font-bold text-xs flex flex-col items-center justify-center text-center gap-1 shadow-brutal-sm active:translate-y-0.5 active:shadow-none transition-all"
+                                className="bg-white hover:bg-slate-50 text-slate-900 p-3 rounded-[16px] border border-slate-200 font-bold text-xs flex flex-col items-center justify-center text-center gap-1 shadow-sm active:translate-y-0.5 active:shadow-none transition-all"
                               >
                                 <span className="text-xl">📞</span>
                                 <span>Call Emergency Contact</span>
@@ -786,7 +761,7 @@ const GlobalCopilot = () => {
                             {m.emergencyData.emergencyServices?.[0] && (
                               <button
                                 onClick={() => window.location.href = `tel:${m.emergencyData.emergencyServices[0].phone}`}
-                                className="bg-white hover:bg-fog text-carbon-black p-3 rounded-lg border-2 border-carbon-black font-bold text-xs flex flex-col items-center justify-center text-center gap-1 shadow-brutal-sm active:translate-y-0.5 active:shadow-none transition-all"
+                                className="bg-white hover:bg-slate-50 text-slate-900 p-3 rounded-[16px] border border-slate-200 font-bold text-xs flex flex-col items-center justify-center text-center gap-1 shadow-sm active:translate-y-0.5 active:shadow-none transition-all"
                               >
                                 <span className="text-xl">🏥</span>
                                 <span>Nearest Emergency Hospital</span>
@@ -794,7 +769,7 @@ const GlobalCopilot = () => {
                             )}
                             <button
                               onClick={() => handleEmergencyTrigger('general')}
-                              className="col-span-2 mt-2 bg-yellow-400 hover:bg-yellow-500 text-carbon-black p-3 rounded-lg border-2 border-carbon-black font-black text-xs uppercase shadow-brutal-sm active:translate-y-0.5 active:shadow-none transition-all flex justify-center gap-2"
+                              className="col-span-2 mt-2 bg-yellow-400 hover:bg-yellow-500 text-slate-900 p-3 rounded-[16px] border border-slate-200 font-black text-xs uppercase shadow-sm active:translate-y-0.5 active:shadow-none transition-all flex justify-center gap-2"
                             >
                               📍 Share Location
                             </button>
@@ -807,7 +782,7 @@ const GlobalCopilot = () => {
 
                 {isProcessing && (
                   <div className="flex justify-start">
-                    <div className="bg-white border border-carbon-black/20 p-4 rounded-2xl flex items-center gap-3 shadow-sm text-xs font-bold text-steel">
+                    <div className="bg-white border border-slate-200 p-4 rounded-[24px] flex items-center gap-3 shadow-sm text-xs font-bold text-slate-500">
                       <Loader2 className="animate-spin text-lime-500" size={14} />
                       Reasoning over medical context...
                     </div>
@@ -817,8 +792,8 @@ const GlobalCopilot = () => {
               </div>
 
               {/* Suggestions Chips */}
-              <div className="px-6 py-3 border-t border-carbon-black/5 bg-white shrink-0 select-none">
-                <div className="text-[10px] font-bold text-steel uppercase tracking-widest mb-2">Suggested Actions</div>
+              <div className="px-6 py-3 border-t border-slate-200/5 bg-white shrink-0 select-none">
+                <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Suggested Actions</div>
                 <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar-horizontal">
                   {suggestions.map((s, idx) => (
                     <button
@@ -826,7 +801,7 @@ const GlobalCopilot = () => {
                       type="button"
                       disabled={isProcessing}
                       onClick={() => handleSendMessage(s.query)}
-                      className="shrink-0 px-3 py-2 bg-fog hover:bg-lime-pulse border border-carbon-black rounded-xl text-[10px] font-bold text-carbon-black transition-all shadow-brutal-sm hover:-translate-y-0.5 disabled:opacity-50 cursor-pointer"
+                      className="shrink-0 px-3 py-2 bg-slate-50 hover:bg-blue-600 border border-slate-200 rounded-[16px] text-[10px] font-bold text-slate-900 transition-all shadow-sm hover:-translate-y-0.5 disabled:opacity-50 cursor-pointer"
                     >
                       {s.label}
                     </button>
@@ -840,7 +815,7 @@ const GlobalCopilot = () => {
                   e.preventDefault();
                   handleSendMessage();
                 }}
-                className="p-6 border-t border-carbon-black/10 bg-white shrink-0 flex gap-2.5"
+                className="p-6 border-t border-slate-100 bg-white shrink-0 flex gap-2.5"
               >
                 <input
                   type="text"
@@ -848,14 +823,14 @@ const GlobalCopilot = () => {
                   onChange={(e) => setInputMessage(e.target.value)}
                   placeholder="Ask about symptoms, timeline, QR, etc..."
                   disabled={isProcessing}
-                  className="flex-1 bg-white border border-carbon-black rounded-xl px-4 py-3 text-xs font-semibold text-carbon-black focus:outline-none focus:ring-2 focus:ring-lime-pulse disabled:opacity-75"
+                  className="flex-1 bg-white border border-slate-200 rounded-[16px] px-4 py-3 text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 disabled:opacity-75"
                 />
                 <button
                   type="submit"
                   disabled={isProcessing || !inputMessage.trim()}
-                  className="px-5 bg-lime-pulse text-carbon-black border border-carbon-black rounded-xl font-bold uppercase tracking-widest text-[10px] shadow-brutal hover:bg-[#97d82f] transition-all flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-5 bg-blue-600 text-white border border-transparent rounded-[16px] font-bold uppercase tracking-widest text-[10px] shadow-md hover:bg-blue-700 transition-all flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Send size={12} /> Send
+                  <Send size={14} /> Send
                 </button>
               </form>
             </motion.div>
@@ -866,7 +841,7 @@ const GlobalCopilot = () => {
       {/* Emergency Modal */}
       <AnimatePresence>
         {isEmergencyModalOpen && (
-          <div className="fixed inset-0 z-[10006] flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[10006] flex items-center justify-center p-4 overflow-y-auto">
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -881,7 +856,7 @@ const GlobalCopilot = () => {
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="relative w-full max-w-md bg-white border-2 border-carbon-black rounded-[20px] overflow-hidden shadow-brutal-dark p-8 text-carbon-black z-[10007]"
+              className="relative w-full max-w-md bg-white border border-slate-200 rounded-[24px] shadow-md p-8 text-slate-900 z-[10007] max-h-[90vh] overflow-y-auto"
             >
               <div className="flex items-center gap-3 mb-6">
                 <span className="px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest border bg-red-50 text-red-600 border-red-200">
@@ -892,7 +867,7 @@ const GlobalCopilot = () => {
               <h2 className="text-3xl font-black uppercase tracking-tight mb-2 leading-none text-red-600">
                 EMERGENCY PORTAL
               </h2>
-              <p className="text-steel font-bold text-sm mb-6">
+              <p className="text-slate-500 font-bold text-sm mb-6">
                 Select an emergency service. You will be prompted to confirm before dialing or sending alerts.
               </p>
 
@@ -906,7 +881,7 @@ const GlobalCopilot = () => {
                   <button
                     key={i}
                     onClick={opt.action}
-                    className="w-full text-left p-4 bg-fog hover:bg-red-50 hover:text-red-600 border border-carbon-black rounded-xl font-bold uppercase text-xs tracking-wider transition-colors shadow-brutal-sm hover:shadow-brutal cursor-pointer flex items-center justify-between"
+                    className="w-full text-left p-4 bg-slate-50 hover:bg-red-50 hover:text-red-600 border border-slate-200 rounded-[16px] font-bold uppercase text-xs tracking-wider transition-colors shadow-sm hover:shadow-md cursor-pointer flex items-center justify-between"
                   >
                     <span>{opt.label}</span>
                     <span className="text-lg">➔</span>
@@ -916,7 +891,7 @@ const GlobalCopilot = () => {
 
               <button
                 onClick={() => setIsEmergencyModalOpen(false)}
-                className="mt-6 w-full py-4 bg-white hover:bg-fog border border-carbon-black font-bold uppercase tracking-widest rounded-xl text-xs transition-colors shadow-brutal-sm cursor-pointer"
+                className="mt-6 w-full py-4 bg-white hover:bg-slate-50 border border-slate-200 font-bold uppercase tracking-widest rounded-[16px] text-xs transition-colors shadow-sm cursor-pointer"
               >
                 Cancel / Close
               </button>

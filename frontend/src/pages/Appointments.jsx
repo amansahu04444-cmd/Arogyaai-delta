@@ -131,14 +131,14 @@ const Appointments = () => {
     switch (status) {
       case 'CONFIRMED': return 'bg-green-50 text-green-600 border-green-200';
       case 'PENDING': return 'bg-orange-50 text-orange-600 border-orange-200';
-      case 'COMPLETED': return 'bg-mint-wash text-green-700 border-green-200';
+      case 'COMPLETED': return 'bg-slate-50 text-green-700 border-green-200';
       case 'CANCELLED': return 'bg-red-50 text-red-600 border-red-200';
-      default: return 'bg-fog text-steel border-carbon-black/20';
+      default: return 'bg-slate-50 text-slate-500 border-slate-200';
     }
   };
 
   return (
-    <div className="min-h-screen text-carbon-black font-sans bg-fog pb-20 selection:bg-lime-pulse/30">
+    <div className="min-h-screen text-slate-900 font-sans bg-slate-50 pb-20 selection:bg-blue-600/30">
 
       <Navbar />
 
@@ -146,18 +146,18 @@ const Appointments = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="pt-36 px-6 md:px-12 max-w-[1400px] mx-auto space-y-12"
+        className="pt-24 lg:pt-10 px-6 md:px-12 max-w-[1400px] mx-auto space-y-12"
       >
         {/* Header */}
-        <motion.div variants={itemVariants} className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-carbon-black/10 pb-10">
+        <motion.div variants={itemVariants} className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-slate-100 pb-10">
           <div>
-            <div className="flex items-center gap-3 text-carbon-black font-bold uppercase tracking-widest text-xs mb-4">
-              <Calendar size={16} /> Scheduling
+            <div className="flex items-center gap-3 text-slate-900 font-bold uppercase tracking-widest text-xs mb-4">
+              <Calendar size={20} /> Scheduling
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold uppercase tracking-tight leading-none mb-4 text-carbon-black">
+            <h1 className="text-5xl lg:text-6xl font-bold uppercase tracking-tight leading-none mb-4 text-slate-900">
               My<br />Appointments
             </h1>
-            <p className="text-steel font-bold text-lg max-w-xl">
+            <p className="text-slate-500 font-bold text-lg max-w-xl">
               Manage your upcoming and past medical appointments.
             </p>
           </div>
@@ -166,7 +166,7 @@ const Appointments = () => {
             onClick={() => setShowBookingModal(true)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 bg-lime-pulse text-carbon-black rounded-2xl font-bold uppercase tracking-widest text-xs shadow-brutal border border-carbon-black flex items-center gap-3 hover:shadow-brutal-dark transition-all"
+            className="px-8 py-4 bg-blue-600 text-slate-900 rounded-[24px] font-bold uppercase tracking-widest text-xs shadow-md border border-slate-200 flex items-center gap-3 hover:shadow-md transition-all"
           >
             <Plus size={20} /> Book New
           </motion.button>
@@ -177,7 +177,7 @@ const Appointments = () => {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-orange-50 border border-orange-200 p-4 rounded-2xl flex items-center gap-3 shadow-brutal-sm"
+            className="bg-orange-50 border border-orange-200 p-4 rounded-[24px] flex items-center gap-3 shadow-sm"
           >
             <AlertCircle size={20} className="text-orange-600" />
             <span className="text-orange-600 font-bold text-sm">{error}</span>
@@ -187,26 +187,26 @@ const Appointments = () => {
         {/* Appointments List */}
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="w-16 h-16 border-4 border-lime-pulse border-t-carbon-black rounded-full animate-spin shadow-brutal-sm" />
+            <div className="w-16 h-16 border-4 border-blue-500 border-t-carbon-black rounded-full animate-spin shadow-sm" />
           </div>
         ) : appointments.length === 0 ? (
           <motion.div
             variants={itemVariants}
             className="flex flex-col items-center justify-center py-20 text-center space-y-6"
           >
-            <div className="w-24 h-24 bg-white rounded-[20px] border border-carbon-black flex items-center justify-center shadow-brutal-sm">
-              <Calendar size={48} className="text-steel" />
+            <div className="w-24 h-24 bg-white rounded-[24px] border border-slate-200 flex items-center justify-center shadow-sm">
+              <Calendar size={48} className="text-slate-500" />
             </div>
             <div>
-              <h3 className="text-3xl font-bold uppercase tracking-tight mb-2 text-carbon-black">No Appointments</h3>
-              <p className="text-steel font-bold max-w-md mx-auto">
+              <h3 className="text-3xl font-bold uppercase tracking-tight mb-2 text-slate-900">No Appointments</h3>
+              <p className="text-slate-500 font-bold max-w-md mx-auto">
                 You don't have any scheduled appointments. Book one now to consult with a specialist.
               </p>
             </div>
             <motion.button
               onClick={() => setShowBookingModal(true)}
               whileTap={{ scale: 0.95 }}
-              className="px-10 py-5 bg-lime-pulse text-carbon-black border border-carbon-black rounded-2xl font-bold uppercase tracking-widest shadow-brutal hover:shadow-brutal-dark hover:-translate-y-1 active:translate-y-1 active:shadow-none transition-all"
+              className="px-10 py-5 bg-blue-600 text-slate-900 border border-slate-200 rounded-[24px] font-bold uppercase tracking-widest shadow-md hover:shadow-md hover:-translate-y-1 active:translate-y-1 active:shadow-none transition-all"
             >
               Book Appointment
             </motion.button>
@@ -220,13 +220,13 @@ const Appointments = () => {
                   key={appointment.id || index}
                   variants={itemVariants}
                   whileHover={{ y: -4 }}
-                  className={`rounded-[20px] p-8 bg-white border border-carbon-black shadow-brutal transition-shadow hover:shadow-brutal-dark`}
+                  className={`rounded-[24px] p-8 bg-white border border-slate-200 shadow-md transition-shadow hover:shadow-md`}
                 >
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                     {/* Date Box */}
-                    <div className="w-24 h-24 bg-sky-wash rounded-[20px] flex flex-col items-center justify-center border border-carbon-black shadow-brutal-sm">
-                      <span className="text-3xl font-bold text-carbon-black leading-none mb-1">{new Date(appointment.date).getDate()}</span>
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-carbon-black">
+                    <div className="w-24 h-24 bg-slate-50 rounded-[24px] flex flex-col items-center justify-center border border-slate-200 shadow-sm">
+                      <span className="text-3xl font-bold text-slate-900 leading-none mb-1">{new Date(appointment.date).getDate()}</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-900">
                         {new Date(appointment.date).toLocaleString('en', { month: 'short' })}
                       </span>
                     </div>
@@ -235,8 +235,8 @@ const Appointments = () => {
                     <div className="flex-1 w-full">
                       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
                         <div>
-                          <h3 className="text-xl font-bold uppercase tracking-tight text-carbon-black leading-none mb-2">{appointment.doctorName}</h3>
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-steel bg-fog border border-carbon-black/10 px-2 py-1 rounded-md inline-block">{appointment.doctorSpecialty}</p>
+                          <h3 className="text-xl font-bold uppercase tracking-tight text-slate-900 leading-none mb-2">{appointment.doctorName}</h3>
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 bg-slate-50 border border-slate-100 px-2 py-1 rounded-md inline-block">{appointment.doctorSpecialty}</p>
                         </div>
                         <span
                           className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border ${statusClass}`}
@@ -245,18 +245,18 @@ const Appointments = () => {
                         </span>
                       </div>
 
-                      <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-steel">
-                        <span className="flex items-center gap-2 text-carbon-black">
-                          <Clock size={14} className="text-carbon-black" /> {appointment.time}
+                      <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-slate-500">
+                        <span className="flex items-center gap-2 text-slate-900">
+                          <Clock size={16} className="text-slate-900" /> {appointment.time}
                         </span>
-                        <span className="flex items-center gap-2 text-carbon-black">
-                          <MapPin size={14} className="text-carbon-black" /> {appointment.location}
+                        <span className="flex items-start gap-2 text-slate-900 break-words whitespace-normal">
+                          <MapPin size={16} className="text-slate-900 shrink-0 mt-0.5" /> {appointment.location}
                         </span>
                       </div>
 
                       {appointment.reason && (
-                        <p className="mt-4 text-xs font-bold text-steel bg-fog p-3 rounded-xl border border-carbon-black/10">
-                          <span className="text-carbon-black">Reason:</span> {appointment.reason}
+                        <p className="mt-4 text-xs font-bold text-slate-500 bg-slate-50 p-3 rounded-[16px] border border-slate-100">
+                          <span className="text-slate-900">Reason:</span> {appointment.reason}
                         </p>
                       )}
                     </div>
@@ -266,13 +266,13 @@ const Appointments = () => {
                       {appointment.status === 'CONFIRMED' && (
                         <button
                           onClick={() => handleCancel(appointment.id)}
-                          className="flex-1 md:flex-none px-6 py-4 bg-white border border-carbon-black rounded-[14px] font-bold text-[10px] uppercase tracking-widest hover:bg-red-50 hover:text-red-600 transition-colors shadow-brutal-sm"
+                          className="flex-1 md:flex-none px-6 py-4 bg-white border border-slate-200 rounded-[14px] font-bold text-[10px] uppercase tracking-widest hover:bg-red-50 hover:text-red-600 transition-colors shadow-sm"
                         >
                           Cancel
                         </button>
                       )}
-                      <button className="w-12 h-12 shrink-0 bg-lime-pulse rounded-[14px] flex items-center justify-center border border-carbon-black hover:bg-[#97d82f] transition-colors shadow-brutal-sm">
-                        <Phone size={18} className="text-carbon-black" />
+                      <button className="w-12 h-12 shrink-0 bg-blue-600 rounded-[14px] flex items-center justify-center border border-slate-200 hover:bg-[#97d82f] transition-colors shadow-sm">
+                        <Phone size={18} className="text-slate-900" />
                       </button>
                     </div>
                   </div>
@@ -291,22 +291,22 @@ const Appointments = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/50"
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/50 overflow-y-auto"
             onClick={() => !bookingLoading && setShowBookingModal(false)}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="w-full max-w-lg bg-white border border-carbon-black rounded-[20px] p-8 md:p-10 shadow-brutal-dark relative"
+              className="w-full max-w-lg bg-white border border-slate-200 rounded-[24px] p-8 md:p-10 shadow-md relative max-h-[90vh] overflow-y-auto"
               onClick={e => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-8">
-                <h3 className="text-2xl font-bold uppercase tracking-tight text-carbon-black">Book Appointment</h3>
+                <h3 className="text-2xl lg:text-3xl font-bold uppercase tracking-tight text-slate-900">Book Appointment</h3>
                 <button
                   onClick={() => setShowBookingModal(false)}
                   disabled={bookingLoading}
-                  className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white border border-carbon-black shadow-brutal flex items-center justify-center text-carbon-black hover:bg-fog transition-colors z-[400] disabled:opacity-50"
+                  className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white border border-slate-200 shadow-md flex items-center justify-center text-slate-900 hover:bg-slate-50 transition-colors z-[400] disabled:opacity-50"
                 >
                   <X size={20} />
                 </button>
@@ -318,23 +318,23 @@ const Appointments = () => {
                   animate={{ scale: 1, opacity: 1 }}
                   className="text-center py-10"
                 >
-                  <div className="w-20 h-20 bg-green-50 border border-green-200 rounded-full flex items-center justify-center mx-auto mb-6 shadow-brutal-sm">
+                  <div className="w-20 h-20 bg-green-50 border border-green-200 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
                     <CheckCircle size={48} className="text-green-600" />
                   </div>
-                  <h4 className="text-2xl font-bold uppercase tracking-tight mb-2 text-carbon-black">Booking Confirmed!</h4>
-                  <p className="text-steel font-bold">You will receive a confirmation shortly.</p>
+                  <h4 className="text-2xl font-bold uppercase tracking-tight mb-2 text-slate-900">Booking Confirmed!</h4>
+                  <p className="text-slate-500 font-bold">You will receive a confirmation shortly.</p>
                 </motion.div>
               ) : (
                 <form onSubmit={handleBooking} className="space-y-6">
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-widest text-steel mb-3">
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">
                       Doctor
                     </label>
                     <select
                       value={bookingData.doctorId}
                       onChange={e => setBookingData(prev => ({ ...prev, doctorId: e.target.value }))}
                       required
-                      className="w-full p-5 bg-white border border-carbon-black rounded-xl focus:outline-none focus:shadow-brutal font-bold text-carbon-black text-sm transition-shadow appearance-none"
+                      className="w-full p-5 bg-white border border-slate-200 rounded-[16px] focus:outline-none focus:shadow-md font-bold text-slate-900 text-sm transition-shadow appearance-none"
                     >
                       <option value="">Select a doctor</option>
                       <option value="dr001">Dr. Priya Sharma - Cardiologist</option>
@@ -345,7 +345,7 @@ const Appointments = () => {
 
                   <div className="grid grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-steel mb-3">
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">
                         Date
                       </label>
                       <input
@@ -354,11 +354,11 @@ const Appointments = () => {
                         onChange={e => setBookingData(prev => ({ ...prev, date: e.target.value }))}
                         required
                         min={new Date().toISOString().split('T')[0]}
-                        className="w-full p-5 bg-white border border-carbon-black rounded-xl focus:outline-none focus:shadow-brutal font-bold text-carbon-black text-sm transition-shadow"
+                        className="w-full p-5 bg-white border border-slate-200 rounded-[16px] focus:outline-none focus:shadow-md font-bold text-slate-900 text-sm transition-shadow"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-steel mb-3">
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">
                         Time
                       </label>
                       <input
@@ -366,20 +366,20 @@ const Appointments = () => {
                         value={bookingData.time}
                         onChange={e => setBookingData(prev => ({ ...prev, time: e.target.value }))}
                         required
-                        className="w-full p-5 bg-white border border-carbon-black rounded-xl focus:outline-none focus:shadow-brutal font-bold text-carbon-black text-sm transition-shadow"
+                        className="w-full p-5 bg-white border border-slate-200 rounded-[16px] focus:outline-none focus:shadow-md font-bold text-slate-900 text-sm transition-shadow"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-widest text-steel mb-3">
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">
                       Reason (Optional)
                     </label>
                     <textarea
                       value={bookingData.reason}
                       onChange={e => setBookingData(prev => ({ ...prev, reason: e.target.value }))}
                       placeholder="Brief description of your concern"
-                      className="w-full p-5 bg-white border border-carbon-black rounded-xl focus:outline-none focus:shadow-brutal font-bold text-carbon-black text-sm transition-shadow resize-none"
+                      className="w-full p-5 bg-white border border-slate-200 rounded-[16px] focus:outline-none focus:shadow-md font-bold text-slate-900 text-sm transition-shadow resize-none"
                       rows={3}
                     />
                   </div>
@@ -388,7 +388,7 @@ const Appointments = () => {
                     type="submit"
                     disabled={bookingLoading}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full py-5 bg-lime-pulse text-carbon-black border border-carbon-black rounded-xl font-bold text-[10px] uppercase tracking-widest shadow-brutal hover:shadow-brutal-dark hover:-translate-y-1 active:translate-y-1 active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 mt-4"
+                    className="w-full py-5 bg-blue-600 text-slate-900 border border-slate-200 rounded-[16px] font-bold text-[10px] uppercase tracking-widest shadow-md hover:shadow-md hover:-translate-y-1 active:translate-y-1 active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 mt-4"
                   >
                     {bookingLoading ? (
                       <>

@@ -38,7 +38,7 @@ const MedicalCardPage = () => {
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
         <div className="bg-white border-2 border-black p-8 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-w-sm w-full text-center space-y-4">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="font-bold text-slate-800">Retrieving Emergency Medical Profile...</p>
+          <p className="font-bold text-slate-900">Retrieving Emergency Medical Profile...</p>
         </div>
       </div>
     );
@@ -103,13 +103,13 @@ const MedicalCardPage = () => {
 
         {/* 1. PATIENT INFORMATION */}
         <section className="bg-white border-2 border-black rounded-2xl p-6 md:p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-6">
-          <h2 className="text-xl font-bold uppercase tracking-wide border-b-2 border-slate-100 pb-3 flex items-center gap-2 text-slate-800">
+          <h2 className="text-xl font-bold uppercase tracking-wide border-b-2 border-slate-100 pb-3 flex items-center gap-2 text-slate-900">
             <User className="text-blue-600" size={20} /> Patient Information
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div>
               <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Full Name</span>
-              <span className="font-bold text-lg text-slate-800">{patient_info.name}</span>
+              <span className="font-bold text-lg text-slate-900">{patient_info.name}</span>
             </div>
             <div>
               <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Blood Group</span>
@@ -117,18 +117,18 @@ const MedicalCardPage = () => {
             </div>
             <div>
               <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Age</span>
-              <span className="font-bold text-lg text-slate-800">{patient_info.age}</span>
+              <span className="font-bold text-lg text-slate-900">{patient_info.age}</span>
             </div>
             <div>
               <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Gender</span>
-              <span className="font-bold text-lg text-slate-800">{patient_info.gender}</span>
+              <span className="font-bold text-lg text-slate-900">{patient_info.gender}</span>
             </div>
           </div>
         </section>
 
         {/* 2. MEDICAL INFORMATION */}
         <section className="bg-white border-2 border-black rounded-2xl p-6 md:p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-6">
-          <h2 className="text-xl font-bold uppercase tracking-wide border-b-2 border-slate-100 pb-3 flex items-center gap-2 text-slate-800">
+          <h2 className="text-xl font-bold uppercase tracking-wide border-b-2 border-slate-100 pb-3 flex items-center gap-2 text-slate-900">
             <Heart className="text-blue-600" size={20} /> Medical Information
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -173,7 +173,7 @@ const MedicalCardPage = () => {
 
         {/* 3. EMERGENCY INFORMATION */}
         <section className="bg-white border-2 border-black rounded-2xl p-6 md:p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-6">
-          <h2 className="text-xl font-bold uppercase tracking-wide border-b-2 border-slate-100 pb-3 flex items-center gap-2 text-slate-800">
+          <h2 className="text-xl font-bold uppercase tracking-wide border-b-2 border-slate-100 pb-3 flex items-center gap-2 text-slate-900">
             <Phone className="text-blue-600" size={20} /> Emergency Information
           </h2>
           <div className="space-y-6">
@@ -194,7 +194,7 @@ const MedicalCardPage = () => {
                   {emergency_info.care_circle.map((member, i) => (
                     <div key={i} className="border border-slate-200 rounded-xl p-4 flex justify-between items-center bg-slate-50">
                       <div>
-                        <span className="font-bold text-slate-800 block">{member.name}</span>
+                        <span className="font-bold text-slate-900 block">{member.name}</span>
                         <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider">{member.relation}</span>
                       </div>
                       {member.phone && (
@@ -217,7 +217,7 @@ const MedicalCardPage = () => {
 
         {/* 4. AI INFORMATION */}
         <section className="bg-white border-2 border-black rounded-2xl p-6 md:p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-6">
-          <h2 className="text-xl font-bold uppercase tracking-wide border-b-2 border-slate-100 pb-3 flex items-center gap-2 text-slate-800">
+          <h2 className="text-xl font-bold uppercase tracking-wide border-b-2 border-slate-100 pb-3 flex items-center gap-2 text-slate-900">
             <Brain className="text-blue-600" size={20} /> AI Triage Assessment
           </h2>
           {ai_info ? (
@@ -237,7 +237,7 @@ const MedicalCardPage = () => {
                 </div>
                 <div>
                   <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Triage Score</span>
-                  <span className="font-extrabold text-lg text-slate-800">
+                  <span className="font-extrabold text-lg text-slate-900">
                     {ai_info.triage_score === 'CONFIDENTIAL' ? (
                       <span className="text-slate-400 italic text-sm">CONFIDENTIAL</span>
                     ) : (

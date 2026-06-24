@@ -244,7 +244,7 @@ const Emergency = () => {
   ];
 
   return (
-    <div className="min-h-screen text-carbon-black font-sans bg-fog pb-20 selection:bg-lime-pulse/30">
+    <div className="min-h-screen text-slate-900 font-sans bg-slate-50 pb-20 selection:bg-blue-600/30">
 
       <Navbar />
 
@@ -252,21 +252,21 @@ const Emergency = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="pt-36 px-6 md:px-12 max-w-[1400px] mx-auto space-y-12"
+        className="pt-24 lg:pt-10 px-6 md:px-12 max-w-[1400px] mx-auto space-y-12"
       >
         {/* Emergency Header */}
         <motion.div variants={itemVariants} className="text-center py-10">
           <motion.div
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
-            className="inline-flex items-center justify-center w-24 h-24 bg-white border border-carbon-black rounded-full mb-6 shadow-brutal-sm text-red-600"
+            className="inline-flex items-center justify-center w-24 h-24 bg-white border border-slate-200 rounded-full mb-6 shadow-sm text-red-600"
           >
             <AlertCircle size={48} />
           </motion.div>
-          <h1 className="text-6xl md:text-8xl font-bold uppercase tracking-tight mb-4 text-carbon-black">
+          <h1 className="text-4xl lg:text-5xl font-bold tracking-tight mb-4 text-slate-900">
             Emergency <span className="text-red-600">SOS</span>
           </h1>
-          <p className="text-steel font-bold text-xl max-w-2xl mx-auto">
+          <p className="text-slate-500 font-bold text-xl max-w-2xl mx-auto">
             Trigger emergency alert with your current triage data and location.
           </p>
         </motion.div>
@@ -275,14 +275,14 @@ const Emergency = () => {
         {triageResult && (
           <motion.div
             variants={itemVariants}
-            className="bg-white border border-carbon-black shadow-brutal-dark rounded-[20px] p-8 flex flex-col md:flex-row items-center justify-between gap-6"
+            className="bg-white border border-slate-200 shadow-md rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6"
           >
             <div className="flex items-center gap-6 w-full md:w-auto">
-              <div className="w-16 h-16 bg-fog rounded-2xl flex items-center justify-center border border-carbon-black shadow-brutal-sm">
-                <Activity size={32} className="text-carbon-black" />
+              <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center border border-slate-200 shadow-sm">
+                <Activity size={32} className="text-slate-900" />
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-steel mb-1">Current Triage Status</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Current Triage Status</p>
                 <h3 className="text-2xl font-bold">
                   <span className={
                     triageResult.risk === 'HIGH' ? 'text-red-600 bg-red-50 px-2 py-1 rounded-lg border border-red-200' :
@@ -290,13 +290,13 @@ const Emergency = () => {
                   }>
                     {triageResult.risk}
                   </span>
-                  <span className="text-steel text-sm ml-4 uppercase tracking-widest">Score: {triageResult.score}</span>
+                  <span className="text-slate-500 text-sm ml-4 uppercase tracking-widest">Score: {triageResult.score}</span>
                 </h3>
               </div>
             </div>
-            <div className="md:text-right w-full md:w-auto border-t md:border-t-0 border-carbon-black/10 pt-4 md:pt-0">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-steel mb-1">Category</p>
-              <p className="font-bold text-lg capitalize text-carbon-black">{triageResult.category}</p>
+            <div className="md:text-right w-full md:w-auto border-t md:border-t-0 border-slate-100 pt-4 md:pt-0">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Category</p>
+              <p className="font-bold text-lg capitalize text-slate-900">{triageResult.category}</p>
             </div>
           </motion.div>
         )}
@@ -306,13 +306,13 @@ const Emergency = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white border border-carbon-black shadow-brutal-dark rounded-[20px] p-10 text-center max-w-2xl mx-auto"
+            className="bg-white border border-slate-200 shadow-md rounded-2xl p-10 text-center max-w-2xl mx-auto"
           >
-            <div className="w-20 h-20 bg-green-50 border border-green-200 rounded-full flex items-center justify-center mx-auto mb-6 shadow-brutal-sm">
+            <div className="w-20 h-20 bg-green-50 border border-green-200 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
               <CheckCircle size={48} className="text-green-600" />
             </div>
-            <h3 className="text-3xl font-bold uppercase tracking-tight mb-2 text-carbon-black">Emergency Alert Sent</h3>
-            <p className="text-steel font-bold">
+            <h3 className="text-2xl lg:text-3xl font-bold uppercase tracking-tight mb-2 text-slate-900">Emergency Alert Sent</h3>
+            <p className="text-slate-500 font-bold">
               Nearest hospital has been notified. Help is on the way.
             </p>
           </motion.div>
@@ -326,8 +326,8 @@ const Emergency = () => {
           >
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Emergency Type Selection */}
-              <div className="bg-sky-wash border border-carbon-black shadow-brutal-dark rounded-[20px] p-8">
-                <label className="block text-xs font-bold uppercase tracking-widest text-steel mb-6">
+              <div className="bg-slate-50 border border-slate-200 shadow-md rounded-2xl p-8">
+                <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-6">
                   Emergency Type
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -339,8 +339,8 @@ const Emergency = () => {
                       whileTap={{ scale: 0.95 }}
                       className={`p-4 rounded-xl border transition-all ${
                         formData.emergencyType === type.id
-                          ? 'border-carbon-black bg-white shadow-brutal-sm text-carbon-black'
-                          : 'border-transparent bg-white/40 hover:bg-white hover:border-carbon-black text-steel hover:text-carbon-black'
+                          ? 'border-slate-200 bg-white shadow-sm text-slate-900'
+                          : 'border-transparent bg-white/40 hover:bg-white hover:border-slate-200 text-slate-500 hover:text-slate-900'
                       }`}
                     >
                       <div className="text-2xl mb-2">{type.icon}</div>
@@ -351,12 +351,12 @@ const Emergency = () => {
               </div>
 
               {/* Contact Info */}
-              <div className="bg-white border border-carbon-black shadow-brutal-dark rounded-[20px] p-8 space-y-6">
-                <label className="block text-xs font-bold uppercase tracking-widest text-steel">
+              <div className="bg-white border border-slate-200 shadow-md rounded-2xl p-8 space-y-6">
+                <label className="block text-xs font-bold uppercase tracking-widest text-slate-500">
                   Emergency Contact
                 </label>
                 <div className="relative">
-                  <Phone size={20} className="absolute left-6 top-1/2 -translate-y-1/2 text-steel" />
+                  <Phone size={20} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500" />
                   <input
                     type="tel"
                     name="contact"
@@ -364,13 +364,13 @@ const Emergency = () => {
                     onChange={handleInputChange}
                     placeholder="Emergency contact number"
                     required
-                    className="w-full p-6 pl-14 bg-fog border border-carbon-black rounded-xl focus:outline-none focus:shadow-brutal font-bold text-carbon-black placeholder-steel transition-shadow"
+                    className="w-full p-6 pl-14 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:shadow-md font-bold text-slate-900 placeholder-steel transition-shadow"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest text-steel mb-3">
+                    <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">
                       Patient Name
                     </label>
                     <input
@@ -380,11 +380,11 @@ const Emergency = () => {
                       onChange={handleInputChange}
                       placeholder="Your name"
                       required
-                      className="w-full p-5 bg-fog border border-carbon-black rounded-xl focus:outline-none focus:shadow-brutal font-bold text-carbon-black placeholder-steel transition-shadow"
+                      className="w-full p-5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:shadow-md font-bold text-slate-900 placeholder-steel transition-shadow"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest text-steel mb-3">
+                    <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">
                       Age
                     </label>
                     <input
@@ -394,22 +394,22 @@ const Emergency = () => {
                       onChange={handleInputChange}
                       placeholder="Age"
                       required
-                      className="w-full p-5 bg-fog border border-carbon-black rounded-xl focus:outline-none focus:shadow-brutal font-bold text-carbon-black placeholder-steel transition-shadow"
+                      className="w-full p-5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:shadow-md font-bold text-slate-900 placeholder-steel transition-shadow"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <div className="flex justify-between items-center mb-3">
-                    <label className="block text-xs font-bold uppercase tracking-widest text-steel">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                    <label className="block text-xs font-bold uppercase tracking-widest text-slate-500">
                       Current Location
                     </label>
-                    <button type="button" onClick={handleGetLocation} className="text-[10px] font-bold text-carbon-black bg-lime-pulse px-3 py-1.5 rounded-full border border-carbon-black shadow-brutal-sm hover:shadow-brutal hover:-translate-y-0.5 transition-all uppercase tracking-wider">
+                    <button type="button" onClick={handleGetLocation} className="text-[10px] font-bold text-slate-900 bg-blue-600 px-3 py-1.5 rounded-full border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all uppercase tracking-wider self-start sm:self-auto">
                       📍 Get Live GPS
                     </button>
                   </div>
                   <div className="relative">
-                    <MapPin size={20} className="absolute left-6 top-1/2 -translate-y-1/2 text-steel" />
+                    <MapPin size={20} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500" />
                     <input
                       type="text"
                       name="patient.location"
@@ -417,7 +417,7 @@ const Emergency = () => {
                       onChange={handleInputChange}
                       placeholder="Describe your location"
                       required
-                      className="w-full p-6 pl-14 bg-fog border border-carbon-black rounded-xl focus:outline-none focus:shadow-brutal font-bold text-carbon-black placeholder-steel transition-shadow"
+                      className="w-full p-6 pl-14 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:shadow-md font-bold text-slate-900 placeholder-steel transition-shadow"
                     />
                   </div>
                 </div>
@@ -425,11 +425,11 @@ const Emergency = () => {
 
               {/* Status Steps Tracker */}
               {(locationStatus !== 'idle' || telegramStatus !== 'idle' || pdfStatus !== 'idle') && (
-                <div className="bg-white border border-carbon-black rounded-[20px] p-6 shadow-brutal-dark space-y-4">
-                  <h4 className="font-bold uppercase text-xs text-steel tracking-wider">SOS Transmission Status</h4>
+                <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-md space-y-4">
+                  <h4 className="font-bold uppercase text-xs text-slate-500 tracking-wider">SOS Transmission Status</h4>
                   <div className="space-y-3 font-bold text-sm">
                     <div className="flex items-center justify-between">
-                      <span className="text-carbon-black">Location GPS Capture</span>
+                      <span className="text-slate-900">Location GPS Capture</span>
                       <span className={
                         locationStatus === 'success' ? 'text-green-600' :
                         locationStatus === 'failed' ? 'text-red-600' :
@@ -440,8 +440,8 @@ const Emergency = () => {
                          locationStatus === 'loading' ? 'Capturing Live coordinates...' : 'Pending'}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between border-t border-carbon-black/5 pt-2">
-                      <span className="text-carbon-black">Telegram Alert Dispatch</span>
+                    <div className="flex items-center justify-between border-t border-slate-200/5 pt-2">
+                      <span className="text-slate-900">Telegram Alert Dispatch</span>
                       <span className={
                         telegramStatus === 'success' ? 'text-green-600' :
                         telegramStatus === 'failed' ? 'text-red-600' :
@@ -452,8 +452,8 @@ const Emergency = () => {
                          telegramStatus === 'loading' ? 'Broadcasting alerts...' : 'Pending'}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between border-t border-carbon-black/5 pt-2">
-                      <span className="text-carbon-black">Medical PDF Document Report</span>
+                    <div className="flex items-center justify-between border-t border-slate-200/5 pt-2">
+                      <span className="text-slate-900">Medical PDF Document Report</span>
                       <span className={
                         pdfStatus === 'success' ? 'text-green-600' :
                         pdfStatus === 'failed' ? 'text-red-600' :
@@ -470,7 +470,7 @@ const Emergency = () => {
 
               {/* Error Message */}
               {error && (
-                <div className="bg-red-50 border border-red-200 p-4 rounded-xl flex items-center gap-3 shadow-brutal-sm">
+                <div className="bg-red-50 border border-red-200 p-4 rounded-xl flex items-center gap-3 shadow-sm">
                   <AlertCircle size={20} className="text-red-600" />
                   <span className="text-red-600 font-bold text-sm">{error}</span>
                 </div>
@@ -483,7 +483,7 @@ const Emergency = () => {
                   onClick={handleTestAlert}
                   disabled={isTestLoading}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-6 bg-white hover:bg-fog text-carbon-black font-bold text-xs uppercase tracking-widest rounded-2xl border border-carbon-black shadow-brutal hover:shadow-brutal-dark transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+                  className="w-full py-6 bg-white hover:bg-slate-50 text-slate-900 font-bold text-xs uppercase tracking-widest rounded-2xl border border-slate-200 shadow-md hover:shadow-md transition-all disabled:opacity-50 flex items-center justify-center gap-3"
                 >
                   {isTestLoading ? <Loader2 size={20} className="animate-spin" /> : '🔔 Test Telegram Alert'}
                 </motion.button>
@@ -492,16 +492,16 @@ const Emergency = () => {
                   type="submit"
                   disabled={isLoading}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-6 bg-red-500 text-carbon-black font-bold text-xs uppercase tracking-widest rounded-2xl border border-carbon-black shadow-brutal hover:shadow-brutal-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                  className="w-full py-8 bg-red-600 text-white font-bold text-lg uppercase tracking-widest rounded-2xl border border-red-500 shadow-md hover:shadow-lg hover:bg-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                 >
                   {isLoading ? (
                     <>
-                      <Loader2 size={20} className="animate-spin" />
+                      <Loader2 size={32} className="animate-spin text-white" />
                       Sending...
                     </>
                   ) : (
                     <>
-                      <Phone size={20} className="text-carbon-black" />
+                      <AlertCircle size={40} className="text-white" />
                       SOS Alert
                     </>
                   )}
@@ -510,7 +510,7 @@ const Emergency = () => {
 
               {/* Backup Number */}
               <div className="text-center pt-4">
-                <p className="text-steel font-bold text-[10px] uppercase tracking-widest mb-2">If this fails, call directly:</p>
+                <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest mb-2">If this fails, call directly:</p>
                 <a href="tel:102" className="text-2xl font-bold text-red-600 hover:text-red-500 transition-colors">
                   102 - Ambulance Service
                 </a>

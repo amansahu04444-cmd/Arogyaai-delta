@@ -13,7 +13,7 @@ import api from '../services/api';
    Shimmer / Skeleton Loading Component
 ───────────────────────────────────────────── */
 const Shimmer = ({ className = '' }) => (
-  <div className={`relative overflow-hidden rounded-lg bg-slate-200 ${className}`}>
+  <div className={`relative overflow-hidden rounded-[16px] bg-slate-200 ${className}`}>
     <div
       className="absolute inset-0"
       style={{
@@ -35,7 +35,7 @@ const ProfileSkeleton = () => (
       </div>
     </div>
     {/* Cards skeleton */}
-    <div className="bg-white rounded-2xl border border-slate-200 p-8 space-y-6">
+    <div className="bg-white rounded-[24px] border border-slate-200 p-8 space-y-6">
       <Shimmer className="h-5 w-40" />
       <div className="grid grid-cols-2 gap-6">
         {[...Array(6)].map((_, i) => (
@@ -46,7 +46,7 @@ const ProfileSkeleton = () => (
         ))}
       </div>
     </div>
-    <div className="bg-white rounded-2xl border border-slate-200 p-8 space-y-6">
+    <div className="bg-white rounded-[24px] border border-slate-200 p-8 space-y-6">
       <Shimmer className="h-5 w-48" />
       <div className="grid grid-cols-2 gap-6">
         {[...Array(4)].map((_, i) => (
@@ -71,7 +71,7 @@ const Toast = ({ message, type, onClose }) => (
     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
     className="fixed top-6 right-6 z-[100] max-w-sm"
   >
-    <div className={`flex items-center gap-3 px-5 py-4 rounded-xl shadow-lg border backdrop-blur-sm ${
+    <div className={`flex items-center gap-3 px-5 py-4 rounded-[16px] shadow-lg border backdrop-blur-sm ${
       type === 'success'
         ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
         : 'bg-red-50 border-red-200 text-red-800'
@@ -105,7 +105,7 @@ const InfoRow = ({ icon: Icon, label, value, iconColor = 'text-slate-400' }) => 
     </div>
     <div className="flex-1 min-w-0">
       <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-0.5">{label}</p>
-      <p className="text-[15px] font-semibold text-slate-800 truncate">
+      <p className="text-[15px] font-semibold text-slate-900 break-words whitespace-normal">
         {value || <span className="text-slate-300 italic font-normal">Not provided</span>}
       </p>
     </div>
@@ -410,15 +410,15 @@ const Profile = () => {
   };
 
   /* ───── Styles ───── */
-  const inputStyle = "w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-slate-800 font-medium text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-lime-400/50 focus:border-lime-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed";
+  const inputStyle = "w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-[16px] text-slate-900 font-medium text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed";
   const labelStyle = "block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5";
-  const sectionCardStyle = "bg-white rounded-2xl border border-slate-200 p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow";
+  const sectionCardStyle = "bg-white rounded-[24px] border border-slate-200 p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow";
 
   /* ═══════════════════════════════════════════
      RENDER
   ═══════════════════════════════════════════ */
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans selection:bg-lime-200">
+    <div className="min-h-screen bg-slate-50 font-sans selection:bg-blue-200">
       <Navbar />
 
       {/* Shimmer keyframes (injected once) */}
@@ -434,7 +434,7 @@ const Profile = () => {
         {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       </AnimatePresence>
 
-      <main className="pt-28 pb-20 px-4 md:px-8 max-w-4xl mx-auto">
+      <main className="pt-24 lg:pt-10 pb-20 px-4 md:px-8 max-w-4xl mx-auto">
 
         {isPageLoading ? (
           <ProfileSkeleton />
@@ -449,16 +449,16 @@ const Profile = () => {
             <div className={sectionCardStyle}>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
                 {/* Avatar */}
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-lime-400 to-emerald-500 flex items-center justify-center text-white text-2xl font-bold shadow-md flex-shrink-0">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white text-2xl font-bold shadow-md flex-shrink-0">
                   {getInitials(profileData.name)}
                 </div>
                 {/* Name + meta */}
                 <div className="flex-1 min-w-0">
-                  <h1 className="text-2xl font-bold text-slate-800 truncate">{profileData.name || 'User'}</h1>
+                  <h1 className="text-2xl font-bold text-slate-900 truncate">{profileData.name || 'User'}</h1>
                   <p className="text-sm text-slate-400 font-medium mt-0.5">{profileData.email}</p>
                   {lastUpdated && (
                     <p className="text-xs text-slate-400 mt-2 flex items-center gap-1.5">
-                      <Clock size={12} /> Last updated: {formatDate(lastUpdated)}
+                      <Clock size={16} /> Last updated: {formatDate(lastUpdated)}
                     </p>
                   )}
                 </div>
@@ -468,7 +468,7 @@ const Profile = () => {
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={enterEditMode}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-slate-800 text-white text-sm font-semibold rounded-xl hover:bg-slate-700 transition-colors shadow-sm"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-slate-800 text-white text-sm font-semibold rounded-[16px] hover:bg-slate-700 transition-colors shadow-sm"
                   >
                     <Edit3 size={15} /> Edit Profile
                   </motion.button>
@@ -477,7 +477,7 @@ const Profile = () => {
                     type="button"
                     onClick={cancelEdit}
                     disabled={isSaving}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 text-slate-600 text-sm font-semibold rounded-xl hover:bg-slate-200 transition-colors disabled:opacity-50"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 text-slate-600 text-sm font-semibold rounded-[16px] hover:bg-slate-200 transition-colors disabled:opacity-50"
                   >
                     <X size={15} /> Cancel
                   </button>
@@ -488,10 +488,10 @@ const Profile = () => {
             {/* ───── Personal Information Card ───── */}
             <div className={sectionCardStyle}>
               <div className="flex items-center gap-2.5 mb-6">
-                <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-[16px] bg-blue-50 flex items-center justify-center">
                   <User size={16} className="text-blue-500" />
                 </div>
-                <h2 className="text-lg font-bold text-slate-800">Personal Information</h2>
+                <h2 className="text-lg font-bold text-slate-900">Personal Information</h2>
               </div>
 
               <AnimatePresence mode="wait">
@@ -592,10 +592,10 @@ const Profile = () => {
             {/* ───── Medical Information Card ───── */}
             <div className={sectionCardStyle}>
               <div className="flex items-center gap-2.5 mb-6">
-                <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-[16px] bg-rose-50 flex items-center justify-center">
                   <Heart size={16} className="text-rose-500" />
                 </div>
-                <h2 className="text-lg font-bold text-slate-800">Medical Information</h2>
+                <h2 className="text-lg font-bold text-slate-900">Medical Information</h2>
               </div>
 
               <AnimatePresence mode="wait">
@@ -707,7 +707,7 @@ const Profile = () => {
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   className="sticky bottom-6 z-50"
                 >
-                  <div className="bg-white/90 backdrop-blur-lg rounded-2xl border border-slate-200 shadow-lg px-6 py-4 flex items-center justify-between gap-4">
+                  <div className="bg-white/90 backdrop-blur-lg rounded-[24px] border border-slate-200 shadow-lg px-6 py-4 flex items-center justify-between gap-4">
                     <p className="text-sm text-slate-500 font-medium hidden sm:block">
                       You have unsaved changes
                     </p>
@@ -716,7 +716,7 @@ const Profile = () => {
                         type="button"
                         onClick={cancelEdit}
                         disabled={isSaving}
-                        className="px-5 py-2.5 bg-slate-100 text-slate-600 text-sm font-semibold rounded-xl hover:bg-slate-200 transition-colors disabled:opacity-50"
+                        className="px-5 py-2.5 bg-slate-100 text-slate-600 text-sm font-semibold rounded-[16px] hover:bg-slate-200 transition-colors disabled:opacity-50"
                       >
                         Cancel
                       </button>
@@ -726,7 +726,7 @@ const Profile = () => {
                         whileTap={{ scale: isSaving ? 1 : 0.98 }}
                         onClick={handleSave}
                         disabled={isSaving}
-                        className="px-6 py-2.5 bg-emerald-500 text-white text-sm font-semibold rounded-xl hover:bg-emerald-600 transition-colors disabled:opacity-70 flex items-center gap-2 shadow-sm"
+                        className="px-6 py-2.5 bg-emerald-500 text-white text-sm font-semibold rounded-[16px] hover:bg-emerald-600 transition-colors disabled:opacity-70 flex items-center gap-2 shadow-sm"
                       >
                         {isSaving ? (
                           <>
@@ -747,20 +747,20 @@ const Profile = () => {
             {/* ───── Medical QR Card Section ───── */}
             <div className={sectionCardStyle}>
               <div className="flex items-center gap-2.5 mb-6">
-                <div className="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-[16px] bg-violet-50 flex items-center justify-center">
                   <QrCode size={16} className="text-violet-500" />
                 </div>
-                <h2 className="text-lg font-bold text-slate-800">Emergency Medical QR</h2>
+                <h2 className="text-lg font-bold text-slate-900">Emergency Medical QR</h2>
               </div>
 
               {qrData ? (
                 <div className="flex flex-col md:flex-row gap-8 items-start">
                   {/* QR Image */}
-                  <div className="bg-white p-4 border border-slate-200 rounded-2xl shadow-sm flex flex-col items-center flex-shrink-0">
+                  <div className="bg-white p-4 border border-slate-200 rounded-[24px] shadow-sm flex flex-col items-center flex-shrink-0">
                     <img
                       src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(getResolvedQrUrl(qrData.qr_url))}`}
                       alt="Medical QR Code"
-                      className="w-[180px] h-[180px] object-contain rounded-lg"
+                      className="w-[180px] h-[180px] object-contain rounded-[16px]"
                     />
                     <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mt-3">
                       ID: {qrData.qr_id?.substring(0, 8)}...
@@ -777,26 +777,26 @@ const Profile = () => {
                     <div className="space-y-3">
                       <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Privacy Level</p>
                       <div className="flex flex-col gap-2.5">
-                        <label className="flex items-center gap-3 cursor-pointer p-3 rounded-xl border border-slate-100 hover:bg-slate-50 transition-colors">
-                          <input type="radio" name="privacy_access" checked={qrData.is_public === true} onChange={() => handlePrivacyChange(true)} className="w-4 h-4 accent-emerald-500" />
-                          <span className="font-semibold text-sm text-slate-700">Public Access <span className="text-slate-400 font-normal">— Show all medical details</span></span>
+                        <label className="flex items-start gap-3 cursor-pointer p-3 rounded-[16px] border border-slate-100 hover:bg-slate-50 transition-colors">
+                          <input type="radio" name="privacy_access" checked={qrData.is_public === true} onChange={() => handlePrivacyChange(true)} className="w-4 h-4 accent-emerald-500 shrink-0 mt-0.5" />
+                          <span className="font-semibold text-sm text-slate-700 break-words whitespace-normal">Public Access <span className="text-slate-400 font-normal">— Show all medical details</span></span>
                         </label>
-                        <label className="flex items-center gap-3 cursor-pointer p-3 rounded-xl border border-slate-100 hover:bg-slate-50 transition-colors">
-                          <input type="radio" name="privacy_access" checked={qrData.is_public === false} onChange={() => handlePrivacyChange(false)} className="w-4 h-4 accent-emerald-500" />
-                          <span className="font-semibold text-sm text-slate-700">Private Access <span className="text-slate-400 font-normal">— Show essentials only</span></span>
+                        <label className="flex items-start gap-3 cursor-pointer p-3 rounded-[16px] border border-slate-100 hover:bg-slate-50 transition-colors">
+                          <input type="radio" name="privacy_access" checked={qrData.is_public === false} onChange={() => handlePrivacyChange(false)} className="w-4 h-4 accent-emerald-500 shrink-0 mt-0.5" />
+                          <span className="font-semibold text-sm text-slate-700 break-words whitespace-normal">Private Access <span className="text-slate-400 font-normal">— Show essentials only</span></span>
                         </label>
                       </div>
                     </div>
 
                     {/* Action buttons */}
                     <div className="flex flex-wrap gap-3 pt-1">
-                      <button type="button" onClick={handleDownloadQr} className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
+                      <button type="button" onClick={handleDownloadQr} className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-[16px] text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
                         <Download size={15} /> Download
                       </button>
-                      <button type="button" onClick={handlePrintQr} className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
+                      <button type="button" onClick={handlePrintQr} className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-[16px] text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
                         <Printer size={15} /> Print Card
                       </button>
-                      <button type="button" onClick={handleGenerateQr} disabled={isGeneratingQr} className="flex items-center gap-2 px-4 py-2.5 bg-red-50 border border-red-200 rounded-xl text-sm font-semibold text-red-600 hover:bg-red-100 transition-colors disabled:opacity-50">
+                      <button type="button" onClick={handleGenerateQr} disabled={isGeneratingQr} className="flex items-center gap-2 px-4 py-2.5 bg-red-50 border border-red-200 rounded-[16px] text-sm font-semibold text-red-600 hover:bg-red-100 transition-colors disabled:opacity-50">
                         <RefreshCw size={15} className={isGeneratingQr ? 'animate-spin' : ''} /> Regenerate
                       </button>
                     </div>
@@ -804,7 +804,7 @@ const Profile = () => {
                 </div>
               ) : (
                 <div className="text-center py-10 space-y-4">
-                  <div className="w-16 h-16 bg-violet-50 rounded-2xl flex items-center justify-center mx-auto">
+                  <div className="w-16 h-16 bg-violet-50 rounded-[24px] flex items-center justify-center mx-auto">
                     <QrCode size={28} className="text-violet-400" />
                   </div>
                   <p className="text-sm text-slate-500 font-medium max-w-sm mx-auto">
@@ -816,7 +816,7 @@ const Profile = () => {
                     whileTap={{ scale: 0.98 }}
                     onClick={handleGenerateQr}
                     disabled={isGeneratingQr}
-                    className="px-6 py-3 bg-violet-600 text-white font-semibold text-sm rounded-xl hover:bg-violet-700 transition-colors shadow-sm disabled:opacity-50 inline-flex items-center gap-2"
+                    className="px-6 py-3 bg-violet-600 text-white font-semibold text-sm rounded-[16px] hover:bg-violet-700 transition-colors shadow-sm disabled:opacity-50 inline-flex items-center gap-2"
                   >
                     {isGeneratingQr ? <><Loader2 size={16} className="animate-spin" /> Generating...</> : 'Generate QR Code'}
                   </motion.button>

@@ -56,22 +56,22 @@ const MapPage = () => {
   const mapThemeAttr = '&copy; OpenStreetMap & CARTO';
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-fog text-carbon-black font-sans selection:bg-lime-pulse/30">
+    <div className="h-screen w-screen flex flex-col bg-slate-50 text-slate-900 font-sans selection:bg-blue-600/30">
       {/* Top Header */}
       <div className="absolute top-0 left-0 w-full z-[1000] p-6 pointer-events-none">
         <div className="flex justify-between items-start max-w-7xl mx-auto">
           <button 
             onClick={() => navigate('/hospitals')}
-            className="pointer-events-auto flex items-center gap-2 bg-white px-6 py-3 rounded-2xl border border-carbon-black hover:bg-fog transition-all font-bold uppercase tracking-widest text-[10px] shadow-brutal-sm"
+            className="pointer-events-auto flex items-center gap-2 bg-white px-6 py-3 rounded-2xl border border-slate-200 hover:bg-slate-50 transition-all font-bold uppercase tracking-widest text-[10px] shadow-sm"
           >
             <ArrowLeft size={16} /> Back
           </button>
           
-          <div className="pointer-events-auto bg-white px-6 py-3 rounded-2xl border border-carbon-black shadow-brutal-sm text-center">
-            <h1 className="font-bold uppercase tracking-tight text-lg text-carbon-black leading-none">
+          <div className="pointer-events-auto bg-white px-6 py-3 rounded-2xl border border-slate-200 shadow-sm text-center">
+            <h1 className="font-bold uppercase tracking-tight text-lg text-slate-900 leading-none">
               Live Map View
             </h1>
-            <p className="text-[10px] font-bold text-steel tracking-widest uppercase mt-1">
+            <p className="text-[10px] font-bold text-slate-500 tracking-widest uppercase mt-1">
               {isLoading ? 'Locating Facilities...' : `${recommendedHospitals.length} Hospitals Found`}
             </p>
           </div>
@@ -81,16 +81,16 @@ const MapPage = () => {
       {/* Main Map Area */}
       <div className="flex-1 relative z-0">
         {isLoading ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-fog z-[500]">
-            <div className="w-16 h-16 border-4 border-lime-pulse border-t-carbon-black rounded-full animate-spin shadow-brutal-sm"></div>
-            <p className="mt-4 font-bold text-steel uppercase tracking-widest text-xs animate-pulse">Initializing Map...</p>
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 z-[500]">
+            <div className="w-16 h-16 border-4 border-lime-pulse border-t-carbon-black rounded-full animate-spin shadow-sm"></div>
+            <p className="mt-4 font-bold text-slate-500 uppercase tracking-widest text-xs animate-pulse">Initializing Map...</p>
           </div>
         ) : error ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-fog z-[500]">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 z-[500]">
             <p className="text-red-600 font-bold text-xl mb-4">Error loading map data</p>
             <button 
               onClick={() => window.location.reload()}
-              className="flex items-center gap-2 px-6 py-3 bg-white border border-carbon-black rounded-xl hover:bg-fog transition-all font-bold text-xs uppercase tracking-widest shadow-brutal-sm text-carbon-black"
+              className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all font-bold text-xs uppercase tracking-widest shadow-sm text-slate-900"
             >
               <RefreshCw size={16} /> Retry
             </button>
@@ -128,8 +128,8 @@ const MapPage = () => {
                 >
                   <Popup className="custom-popup">
                     <div className="p-1">
-                      <h3 className="font-bold uppercase text-carbon-black leading-tight text-xs mb-1">{hospital.name}</h3>
-                      <p className="text-[10px] font-bold text-steel uppercase tracking-widest mb-2">{hospital.type} • {hospital.distance}</p>
+                      <h3 className="font-bold uppercase text-slate-900 leading-tight text-xs mb-1">{hospital.name}</h3>
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">{hospital.type} • {hospital.distance}</p>
                       {hospital.phone && (
                         <p className="text-[10px] font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded border border-green-200 inline-block">{hospital.phone}</p>
                       )}
@@ -160,21 +160,21 @@ const MapPage = () => {
           animate={{ y: 0, opacity: 1 }}
           className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[1000] w-full max-w-md px-4 pointer-events-none"
         >
-          <div className="bg-white border border-carbon-black p-6 rounded-[20px] shadow-brutal-dark pointer-events-auto">
+          <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-md pointer-events-auto">
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h3 className="text-xl font-bold uppercase tracking-tight leading-none text-carbon-black">{selectedHospital.name}</h3>
-                <p className="text-[10px] font-bold text-steel mt-1 uppercase tracking-widest">{selectedHospital.type} Facility</p>
+                <h3 className="text-xl font-bold uppercase tracking-tight leading-none text-slate-900">{selectedHospital.name}</h3>
+                <p className="text-[10px] font-bold text-slate-500 mt-1 uppercase tracking-widest">{selectedHospital.type} Facility</p>
               </div>
-              <div className="bg-lime-pulse text-carbon-black border border-carbon-black px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-widest shadow-brutal-sm">
+              <div className="bg-blue-600 text-slate-900 border border-slate-200 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-widest shadow-sm">
                 {selectedHospital.distance}
               </div>
             </div>
-            <p className="text-sm font-medium text-carbon-black mb-4 line-clamp-2">{selectedHospital.address}</p>
+            <p className="text-sm font-medium text-slate-900 mb-4 line-clamp-2">{selectedHospital.address}</p>
             <div className="flex gap-3">
               <button 
                 onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${selectedHospital.lat},${selectedHospital.lng}`, '_blank')}
-                className="flex-1 bg-carbon-black text-white py-3 rounded-xl font-bold uppercase tracking-widest text-[10px] flex justify-center items-center gap-2 hover:bg-carbon-black/90 shadow-brutal-sm"
+                className="flex-1 bg-slate-800 text-white py-3 rounded-xl font-bold uppercase tracking-widest text-[10px] flex justify-center items-center gap-2 hover:bg-slate-800/90 shadow-sm"
               >
                 <Navigation size={16} /> Navigate
               </button>

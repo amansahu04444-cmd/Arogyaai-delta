@@ -30,12 +30,80 @@
   --color-neo-red: #ef4444;
   --color-neo-blue: #93c5fd;
   --color-neo-bg: #fffbf0;
+
+  /* Modern Medical Theme */
+  --color-med-primary: #0ea5e9;
+  --color-med-secondary: #2563eb;
+  --color-med-accent: #38bdf8;
+  --color-med-bg: #ffffff;
+  --color-med-sec-bg: #f8fafc;
+  --color-med-card-bg: #ffffff;
+  --color-med-text: #0f172a;
+  --color-med-muted: #64748b;
+  --color-med-border: #e2e8f0;
+
+  /* Headspace Style Reference Tokens */
+  --color-page-cream: #f9f4f2;
+  --color-pure-white: #ffffff;
+  --color-charcoal-ink: #2d2c2b;
+  --color-graphite-ink: #44423f;
+  --color-slate-ink: #4b4c4d;
+  --color-stone-ink: #63605d;
+  --color-driftwood-ink: #c6c1b9;
+  --color-linen: #e2ded9;
+  --color-ash: #d0d0d0;
+  --color-soft-black: #000000;
+  --color-brand-orange: #f47d31;
+  --color-mindful-blue: #0061ef;
+  --color-sunbeam-yellow: #ffce00;
+  --color-deep-indigo: #3b197f;
+  --color-twilight-violet: #281466;
+  --color-plum: #5f2b89;
+  --color-mauve: #8144a8;
+  --color-celeste: #00a4ff;
+
+  /* Custom Spacing */
+  --spacing-4: 4px;
+  --spacing-8: 8px;
+  --spacing-12: 12px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-56: 56px;
+  --spacing-60: 60px;
+  --spacing-64: 64px;
+  --spacing-80: 80px;
+  --spacing-84: 84px;
+  --spacing-96: 96px;
+  --spacing-100: 100px;
+
+  /* Custom Radius */
+  --radius-cards: 16px;
+  --radius-pills: 800px;
+  --radius-small: 8px;
+  --radius-inputs: 8px;
+  --radius-buttons: 800px;
+  --radius-featured: 24px;
+
+  /* Custom Shadow */
+  --shadow-subtle: rgba(65, 61, 69, 0.2) 0px 2px 0px 0px;
 }
 
 @layer base {
   body {
     @apply bg-white font-sans text-black selection:bg-lime-pulse;
     font-feature-settings: "ss01" on, "cv11" on;
+  }
+  body.has-sidebar {
+    transition: padding-left 300ms ease-in-out;
+  }
+  @media (min-width: 1024px) {
+    body.has-sidebar {
+      padding-left: 280px;
+    }
   }
 }
 
@@ -86,7 +154,7 @@
     transform: translate(0px, 0px);
     box-shadow: 0px 0px 0px 0px rgba(0,0,0,1);
   }
-  
+
   .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
   }
