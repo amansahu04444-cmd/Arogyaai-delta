@@ -70,7 +70,7 @@ async function makeCall(to, message, metadata = {}) {
 
 async function sendEmergencyAlert(contact, emergencyType, patientInfo, userId) {
   const { getClient } = require('../config/db');
-  const { sendTelegramMessage } = require('./telegram.service');
+  const { broadcastEmergencyAlert } = require('./telegram.service');
   const supabase = getClient();
   
   const googleMapsLink = patientInfo.location 
@@ -93,18 +93,17 @@ async function sendEmergencyAlert(contact, emergencyType, patientInfo, userId) {
     try {
       const { data: familyMembers, error } = await supabase
         .from('family_members')
-        .select('telegram_chat_id')
+        .select('*')
         .eq('user_id', userId);
         
       if (!error && familyMembers && familyMembers.length > 0) {
-        let sentCount = 0;
-        for (const member of familyMembers) {
-          if (member.telegram_chat_id) {
-            const success = await sendTelegramMessage(member.telegram_chat_id, message);
-            if (success) sentCount++;
-          }
-        }
-        results.telegramSentCount = sentCount;
+        const broadcastResult = await broadcastEmergencyAlert(familyMembers, {
+          userId,
+          patientName: patientInfo.name,
+          riskLevel: emergencyType,
+          symptoms: 'Not Available'
+        });
+        results.telegramSentCount = broadcastResult.sent;
       }
     } catch (err) {
       logger.error('Failed to send Telegram alerts to family', { error: err.message, userId });

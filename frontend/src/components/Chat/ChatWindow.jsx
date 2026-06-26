@@ -6,7 +6,7 @@ import { useChatHook } from '../../hooks/useChatHook';
 const ChatBubble = ({ message }) => {
   const isBot = message.type === 'bot';
   const isError = message.type === 'error';
-  
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 10 }} 
@@ -39,6 +39,7 @@ const ChatWindow = () => {
     sendMessage(inputText);
     setInputText('');
   };
+
 
   return (
     <AnimatePresence>

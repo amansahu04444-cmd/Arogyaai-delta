@@ -1,13 +1,150 @@
 const { telegram } = require('../config/env');
 const logger = require('../utils/logger');
+const { getClient } = require('../config/db');
 
 /**
- * Send a Telegram document (like medical report PDF)
+ * Normalizes risk levels to LOW, MEDIUM, HIGH, CRITICAL.
+ */
+function normalizeRiskLevel(level) {
+  if (!level || typeof level !== 'string') return 'HIGH';
+  const clean = level.toUpperCase().trim();
+  if (['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'].includes(clean)) {
+    return clean;
+  }
+  if (clean.includes('CRIT') || clean.includes('EMERGENCY')) return 'CRITICAL';
+  if (clean.includes('HIGH')) return 'HIGH';
+  if (clean.includes('MED')) return 'MEDIUM';
+  if (clean.includes('LOW')) return 'LOW';
+  return 'HIGH';
+}
+
+/**
+ * Standardizes symptoms formatting into clean bullet points.
+ */
+function formatSymptoms(symptoms) {
+  if (!symptoms) return 'Not Available';
+  
+  let list = [];
+  if (Array.isArray(symptoms)) {
+    list = symptoms;
+  } else if (typeof symptoms === 'string') {
+    list = symptoms
+      .split(/[,\n•*]/)
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
+  }
+  
+  if (list.length === 0) return 'Not Available';
+  return list.map(item => `• ${item}`).join('\n');
+}
+
+/**
+ * Resolves patient name using fallback order (no emails, no generic placeholders).
+ */
+async function resolvePatientName({ userId, patientName, patient, profile, family_member, supabase }) {
+  const isValidName = (name) => {
+    if (!name || typeof name !== 'string') return false;
+    const val = name.trim();
+    return val.length > 0 && !val.includes('@') && val.toLowerCase() !== 'user' && val.toLowerCase() !== 'patient';
+  };
+
+  if (patient && isValidName(patient.full_name)) {
+    return patient.full_name.trim();
+  }
+  if (profile && isValidName(profile.name)) {
+    return profile.name.trim();
+  }
+  if (family_member && isValidName(family_member.name)) {
+    return family_member.name.trim();
+  }
+  if (isValidName(patientName)) {
+    return patientName.trim();
+  }
+
+  if (userId && supabase) {
+    try {
+      const { data: dbUser } = await supabase
+        .from('users')
+        .select('name')
+        .eq('id', userId)
+        .maybeSingle();
+      if (dbUser && isValidName(dbUser.name)) {
+        return dbUser.name.trim();
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }
+
+  return 'Unknown Patient';
+}
+
+/**
+ * Resolves location link, falling back to last log coordinates if inputs are missing.
+ */
+async function resolveLocation({ userId, latitude, longitude, supabase }) {
+  if (latitude !== undefined && latitude !== null && latitude !== '' &&
+      longitude !== undefined && longitude !== null && longitude !== '') {
+    return `https://maps.google.com/?q=${latitude},${longitude}`;
+  }
+
+  if (userId && supabase) {
+    try {
+      const { data: lastLog } = await supabase
+        .from('emergency_logs')
+        .select('latitude, longitude')
+        .eq('user_id', userId)
+        .not('latitude', 'is', null)
+        .not('longitude', 'is', null)
+        .order('triggered_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (lastLog && lastLog.latitude && lastLog.longitude) {
+        return `https://maps.google.com/?q=${lastLog.latitude},${lastLog.longitude}`;
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }
+
+  return 'Location Unavailable';
+}
+
+/**
+ * Resolves medical QR link, querying database if not passed.
+ */
+async function resolveQrCode({ userId, qrCode, qrUrl, supabase }) {
+  const code = qrCode || qrUrl;
+  if (code && typeof code === 'string' && code.trim().length > 0 && code.toLowerCase() !== 'not available') {
+    return code.trim();
+  }
+
+  if (userId && supabase) {
+    try {
+      const { data: qrData } = await supabase
+        .from('medical_qr')
+        .select('qr_url')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (qrData && qrData.qr_url) {
+        return qrData.qr_url.trim();
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }
+
+  return 'Not Available';
+}
+
+/**
+ * Sends a Telegram document (report PDF) with a caption.
  */
 const sendTelegramDocument = async (chatId, pdfBuffer, caption) => {
   try {
     if (!chatId || isNaN(chatId) || chatId.toString().length < 5) {
-      console.error(`❌ INVALID CHAT ID SKIPPED: "${chatId}"`);
       return false;
     }
 
@@ -17,190 +154,233 @@ const sendTelegramDocument = async (chatId, pdfBuffer, caption) => {
     const blob = new Blob([pdfBuffer], { type: 'application/pdf' });
     formData.append('document', blob, 'Medical_Report.pdf');
     formData.append('caption', caption);
-    formData.append('parse_mode', 'HTML');
 
     const res = await fetch(
       `https://api.telegram.org/bot${telegram.botToken}/sendDocument`,
       {
-        method: "POST",
-        body: formData,
+        method: 'POST',
+        body: formData
       }
     );
 
     const data = await res.json();
-
-    if (!data.ok) {
-      console.error(`❌ Telegram sendDocument API Error for ${chatId}:`, data.description);
-      return false;
-    }
-
-    console.log(`✅ Telegram document sent successfully to ${chatId}`);
-    return true;
+    return !!data.ok;
   } catch (err) {
-    console.error(`❌ Error sending document to ${chatId}:`, err.message);
     return false;
   }
 };
 
 /**
- * Send a Telegram message with accurate success/failure detection and retry logic
+ * Sends a raw Telegram message text.
  */
 const sendTelegramMessage = async (chatId, message) => {
   try {
     if (!chatId || isNaN(chatId) || chatId.toString().length < 5) {
-      console.error(`❌ INVALID CHAT ID SKIPPED: "${chatId}"`);
       return false;
     }
-
-    console.log(`📡 SENDING TO CHAT_ID: ${chatId}...`);
 
     const res = await fetch(
       `https://api.telegram.org/bot${telegram.botToken}/sendMessage`,
       {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           chat_id: chatId,
-          text: message,
-          parse_mode: 'HTML'
-        }),
+          text: message
+        })
       }
     );
 
     const data = await res.json();
-
-    if (!data.ok) {
-      console.error(`❌ Telegram API Error for ${chatId}:`, data.description);
-      return false;
-    }
-
-    console.log(`✅ Telegram message sent successfully to ${chatId}`);
-    return true;
-
+    return !!data.ok;
   } catch (err) {
-    console.error(`❌ Network/Internal Error sending to ${chatId}:`, err.message);
     return false;
   }
 };
 
 /**
- * Retry logic for Telegram messages
+ * Retries sending message using exponential delay (3 attempts maximum).
  */
 const retrySend = async (chatId, message) => {
   if (!chatId || isNaN(chatId) || chatId.toString().length < 5) {
     return false;
   }
 
-  for (let i = 0; i < 3; i++) {
-    const success = await sendTelegramMessage(chatId, message);
+  // Attempt 1
+  let success = await sendTelegramMessage(chatId, message);
+  if (success) return true;
 
-    if (success) return true;
+  // Attempt 2
+  console.log('[Telegram] Retry 1');
+  await new Promise(r => setTimeout(r, 1000));
+  success = await sendTelegramMessage(chatId, message);
+  if (success) return true;
 
-    console.warn(`⚠️ Retry attempt ${i + 1}/3 for ${chatId}`);
-    await new Promise(r => setTimeout(r, 2000));
-  }
+  // Attempt 3
+  console.log('[Telegram] Retry 2');
+  await new Promise(r => setTimeout(r, 2000));
+  success = await sendTelegramMessage(chatId, message);
+  if (success) return true;
 
-  console.error(`❌ Final Telegram send failure after 3 attempts: ${chatId}`);
   return false;
 };
 
 /**
- * Build a formatted emergency alert message
+ * Backwards compatible message builder (unused in unified flow, but kept).
  */
-function buildEmergencyMessage({ userName, emergencyType, latitude, longitude, timestamp }) {
-  const locationLink = latitude && longitude
-    ? `https://www.google.com/maps?q=${latitude},${longitude}`
-    : 'Location Unavailable';
-
+function buildEmergencyMessage({ userName, emergencyType, latitude, longitude }) {
+  const mapsUrl = latitude && longitude ? `https://maps.google.com/?q=${latitude},${longitude}` : 'Location Unavailable';
   return [
-    '🚨 <b>EMERGENCY ALERT</b> 🚨',
+    '🚨 AROGYAAI EMERGENCY ALERT',
     '',
-    `👤 <b>Patient:</b> ${userName || 'Unknown'}`,
-    `⚠️ <b>Type:</b> ${emergencyType || 'General Emergency'}`,
-    `🕐 <b>Time:</b> ${timestamp || new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}`,
+    `👤 Patient\n${userName || 'Unknown'}`,
     '',
-    locationLink,
+    `⚠ Risk Level\n${normalizeRiskLevel(emergencyType)}`,
     '',
-    '⚡ <i>Please respond immediately. This is an automated alert from ArogyaAI.</i>'
+    `📍 Live Location\n${mapsUrl}`
   ].join('\n');
 }
 
 /**
- * Broadcast emergency alert to all linked family members with PDF report attached
+ * Centralized broadcaster for emergency alerts.
  */
 async function broadcastEmergencyAlert(contacts, alertData) {
-  const { userId, userName, emergencyType, latitude, longitude, qrUrl, symptoms, hospital } = alertData;
+  console.log('[Telegram] Preparing Alert');
+  
+  const supabase = getClient();
+  
+  const {
+    userId,
+    userName,
+    patientName,
+    patient,
+    profile,
+    family_member,
+    emergencyType,
+    riskLevel,
+    symptoms,
+    qrUrl,
+    qrCode,
+    latitude,
+    longitude
+  } = alertData;
 
-  console.log(`[TELEGRAM PAYLOAD] userId: ${userId} | Name: ${userName} | Type: ${emergencyType} | Lat: ${latitude} | Lng: ${longitude} | QR: ${qrUrl} | Hospital: ${hospital}`);
+  // 1. Resolve Patient Name
+  const resolvedName = await resolvePatientName({
+    userId,
+    patientName: patientName || userName,
+    patient,
+    profile,
+    family_member,
+    supabase
+  });
 
-  const locationLink = latitude && longitude
-    ? `https://www.google.com/maps?q=${latitude},${longitude}`
-    : 'Location Unavailable';
+  // 2. Resolve Risk Level
+  const resolvedRisk = normalizeRiskLevel(riskLevel || emergencyType);
 
-  const captionLines = [
-    '🚨 <b>AROGYAAI EMERGENCY ALERT</b>',
+  // 3. Resolve Symptoms
+  const resolvedSymptoms = formatSymptoms(symptoms);
+
+  // 4. Resolve Location Link
+  const locationLink = await resolveLocation({
+    userId,
+    latitude,
+    longitude,
+    supabase
+  });
+
+  // 5. Resolve QR Code Link
+  const qrCodeLink = await resolveQrCode({
+    userId,
+    qrCode: qrCode || qrUrl,
+    supabase
+  });
+
+  console.log('[Telegram] Formatting Message');
+
+  // Unified Alert Format
+  const message = [
+    '🚨 AROGYAAI EMERGENCY ALERT',
     '',
-    `<b>Patient:</b> ${userName || 'Patient'}`,
-    `<b>Risk Level:</b> ${emergencyType || 'HIGH'}`
-  ];
+    '👤 Patient',
+    resolvedName,
+    '',
+    '⚠ Risk Level',
+    resolvedRisk,
+    '',
+    '🩺 Symptoms',
+    resolvedSymptoms,
+    '',
+    '📍 Live Location',
+    locationLink,
+    '',
+    '🏥 Medical QR',
+    qrCodeLink,
+    '',
+    '📄 Medical Report',
+    'Attached'
+  ].join('\n');
 
-  if (symptoms) {
-    captionLines.push(`<b>Symptoms:</b> ${symptoms}`);
-  }
-
-  if (qrUrl) {
-    captionLines.push(`<b>Medical QR:</b> ${qrUrl}`);
-  }
-
-  captionLines.push(`<b>Location:</b> ${locationLink}`);
-
-  if (hospital) {
-    captionLines.push(`<b>Nearest Hospital:</b> ${hospital}`);
-  }
-
-  captionLines.push('', 'Medical Report Attached.');
-
-  const caption = captionLines.join('\n');
-
+  console.log('[Telegram] Generating PDF');
   let pdfBuffer = null;
   let pdfGenerated = false;
-  try {
-    const { buildPdfBuffer } = require('../controllers/timeline.controller');
-    pdfBuffer = await buildPdfBuffer(userId);
-    pdfGenerated = true;
-  } catch (pdfErr) {
-    console.error('❌ Failed to generate PDF for emergency broadcast:', pdfErr.message);
+
+  if (userId) {
+    try {
+      const { buildPdfBuffer } = require('../controllers/timeline.controller');
+      pdfBuffer = await buildPdfBuffer(userId);
+      pdfGenerated = !!pdfBuffer;
+    } catch (pdfErr) {
+      // Keep going, notification must not fail
+    }
   }
 
   let sent = 0;
   let failed = 0;
   const results = [];
 
-  for (const contact of contacts) {
+  const targetContacts = Array.isArray(contacts) ? contacts : [contacts];
+
+  for (const contact of targetContacts) {
+    const chatId = contact.telegram_chat_id || contact.chatId || 
+      (typeof contact === 'string' || typeof contact === 'number' ? contact.toString() : null);
+
+    if (!chatId) continue;
+
+    console.log('[Telegram] Sending');
     let success = false;
+
     if (pdfGenerated && pdfBuffer) {
-      success = await sendTelegramDocument(contact.telegram_chat_id, pdfBuffer, caption);
+      success = await sendTelegramDocument(chatId, pdfBuffer, message);
       if (!success) {
-        console.warn(`⚠️ PDF document send failed for ${contact.telegram_chat_id}, falling back to text`);
-        success = await retrySend(contact.telegram_chat_id, caption);
+        // PDF delivery failed, fallback to text-only with retries
+        success = await retrySend(chatId, message);
       }
     } else {
-      success = await retrySend(contact.telegram_chat_id, caption);
+      success = await retrySend(chatId, message);
     }
 
     if (success) {
+      console.log('[Telegram] Delivered');
       sent++;
     } else {
+      console.log('[Telegram] Failed');
       failed++;
     }
+
     results.push({
-      name: contact.name,
-      telegram_chat_id: contact.telegram_chat_id,
+      chatId,
       status: success ? 'sent' : 'failed'
     });
   }
 
-  return { sent, failed, total: contacts.length, results, pdfSent: pdfGenerated };
+  return {
+    sent,
+    failed,
+    total: targetContacts.length,
+    results,
+    pdfSent: pdfGenerated
+  };
 }
 
 module.exports = {

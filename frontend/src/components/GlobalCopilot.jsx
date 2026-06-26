@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, Send, Loader2, RefreshCw, X, ShieldAlert, Siren } from 'lucide-react';
 import { useHealth } from '../store/HealthContext';
 import { useHospitalRecommendation } from '../hooks/useHospitalRecommendation';
 import { useUserStore } from '../store/userStore';
+import { streamToState } from '../utils/streamMessage';
 import api, { getUserProfile, queryCopilot, downloadTimelinePdf } from '../services/api';
 
 const GlobalCopilot = () => {
@@ -251,17 +252,20 @@ const GlobalCopilot = () => {
           emergencyData: res.emergencyData || null,
           timelineData: res.timelineData || null,
           triageData: res.triageData || null,
-          summaryData: res.summaryData || null,
           qrData: res.qrData || null,
+          summaryData: res.summaryData || null,
           insightsData: res.insightsData || null,
           reportsData: res.reportsData || null,
-          timelineCount: res.timelineCount,
-          reportCount: res.reportCount
+          emergencyData: res.emergencyData || null,
+          downloadUrl: res.downloadUrl || null
         };
         
         console.log("Adding Message", { type: res.type, hospitals: res.hospitals, answer: res.answer });
         
         setMessages(prev => [...prev, msgPayload]);
+
+        // Stream the text content directly into the message
+        streamToState(res.answer || res.content, msgPayload.id, setMessages, 'content');
       } else {
         const errorDetail = res?.message || res?.error || 'Unknown error occurred';
         throw new Error(errorDetail);

@@ -3,6 +3,7 @@ import { useHealth } from '../store/HealthContext';
 import { processVoiceTriage } from '../services/api';
 import { speakResponse } from '../services/voice';
 import { supabase } from '../lib/supabase';
+import { streamToState } from '../utils/streamMessage';
 
 export const useChatHook = () => {
   const {
@@ -124,13 +125,23 @@ export const useChatHook = () => {
         telegram_error: resultData.telegram_error
       });
 
-      // Temporarily show AI response in chat for debugging
+      // Insert empty message first
+      const botMessageId = Date.now();
       const botMessage = {
-        id: Date.now(),
-        text: JSON.stringify(resultData, null, 2),
+        id: botMessageId,
+        text: '',
         type: "bot"
       };
       setMessages(prev => [...prev, botMessage]);
+
+      const fullResponseText = typeof resultData.recommendation === 'string' 
+        ? resultData.recommendation 
+        : typeof resultData.recommendation === 'object' && resultData.recommendation.summary
+          ? resultData.recommendation.summary
+          : JSON.stringify(resultData, null, 2);
+
+      // Stream the response directly into state
+      streamToState(fullResponseText, botMessageId, setMessages, 'text');
 
       // ========== SAVE CONVERSATION TO SUPABASE ==========
       await saveConversation(text, resultData);

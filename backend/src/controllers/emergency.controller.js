@@ -95,8 +95,9 @@ async function triggerEmergency(req, res, next) {
     // Use ONLY linkedContacts in broadcast and await it to prevent race conditions
     const result = await broadcastEmergencyAlert(linkedContacts, {
       userId,
-      userName: userName || req.user?.email || 'User',
-      emergencyType,
+      patientName: userName || null,
+      riskLevel: emergencyType,
+      symptoms: req.body.symptoms || 'Not Available',
       latitude,
       longitude
     });

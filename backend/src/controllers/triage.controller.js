@@ -1,7 +1,7 @@
 const axios = require('axios');
 const logger = require('../utils/logger');
 const { getClient } = require('../config/db');
-const { retrySend } = require('../services/telegram.service');
+const { retrySend, broadcastEmergencyAlert } = require('../services/telegram.service');
 
 // Helper to get frontend base URL dynamically with fallbacks
 function getFrontendUrl(req) {
@@ -216,17 +216,14 @@ exports.processTriage = async (req, res) => {
               }
 
               const nearestHospital = getNearestHospitalFromDB(lat, lng);
-              const { broadcastEmergencyAlert } = require('../services/telegram.service');
-              
               const broadcastResult = await broadcastEmergencyAlert(linkedContacts, {
                 userId,
-                userName,
-                emergencyType: apiData.risk_level || 'HIGH',
+                patientName: userName || null,
+                riskLevel: apiData.risk_level || 'HIGH',
+                symptoms: text,
                 latitude: lat,
                 longitude: lng,
-                qrUrl,
-                symptoms: text,
-                hospital: nearestHospital ? `${nearestHospital.name} (${nearestHospital.distance})` : null
+                qrCode: qrUrl || null
               });
 
               telegramSent = broadcastResult.sent > 0;

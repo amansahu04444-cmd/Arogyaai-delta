@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Activity, Send, Mic, MicOff, AlertCircle, Loader2 } from 'lucide-react';
 import api, { addTimelineEntry } from '../services/api';
 import Navbar from '../components/Navbar';
 import { initVoiceRecognition } from '../services/voice';
 import { useUserStore } from '../store/userStore';
+import { streamToState } from '../utils/streamMessage';
 
 // Format recommendation object into a clean structured string for copy/fallback
 const formatAIResponse = (data) => {
@@ -153,13 +154,20 @@ const Consultation = () => {
       const response = await api.post('/api/triage', payload);
       
       if (response.success) {
+        const botMessageId = Date.now();
+        const fullResponseText = formatAIResponse(response);
+        
         const aiMessage = {
+          id: botMessageId,
           role: 'assistant',
-          text: formatAIResponse(response),
+          text: '', // Start empty for streaming
           triage: response,
           timestamp: new Date()
         };
         setConversationHistory(prev => [...prev, aiMessage]);
+
+        // Stream the text into the state
+        streamToState(fullResponseText, botMessageId, setConversationHistory, 'text');
 
         // Auto-log to Symptom Timeline
         try {
@@ -256,78 +264,9 @@ const Consultation = () => {
     });
   };
 
-  // Render formatted components for triage results inside the chat message bubble
-  const renderMessageContent = (msg) => {
-    if (msg.role === 'user') {
-      return <p className="font-bold text-sm leading-relaxed whitespace-pre-line break-words">{msg.text}</p>;
-    }
-
-    const triage = msg.triage;
-    const rec = triage?.recommendation;
-
-    if (!triage || !rec || typeof rec === 'string') {
-      return <p className="font-bold text-sm leading-relaxed whitespace-pre-line break-words">{msg.text}</p>;
-    }
-
-    return (
-      <div className="space-y-4 text-slate-900">
-        {rec.summary && (
-          <p className="font-bold text-sm leading-relaxed">{rec.summary}</p>
-        )}
-
-        {rec.possible_causes && rec.possible_causes.length > 0 && (
-          <div className="space-y-1">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">Possible Causes:</h4>
-            <ul className="list-disc pl-5 space-y-0.5 text-sm font-bold">
-              {rec.possible_causes.map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {rec.home_care && rec.home_care.length > 0 && (
-          <div className="space-y-1">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">Home Care:</h4>
-            <ul className="list-disc pl-5 space-y-0.5 text-sm font-bold">
-              {rec.home_care.map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {rec.doctor_visit && rec.doctor_visit.length > 0 && (
-          <div className="space-y-1">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">Doctor Visit:</h4>
-            <ul className="list-disc pl-5 space-y-0.5 text-sm font-bold">
-              {rec.doctor_visit.map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {rec.warning_signs && rec.warning_signs.length > 0 && (
-          <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-[16px] space-y-1">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-red-600 flex items-center gap-1.5">
-              <AlertCircle size={16} /> Warning Signs:
-            </h4>
-            <ul className="list-disc pl-5 space-y-0.5 text-sm font-bold text-red-600">
-              {rec.warning_signs.map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {triage.followUpQuestion && (
-          <div className="pt-2 border-t border-slate-100 mt-2 text-slate-900/80 font-bold italic text-sm">
-            {triage.followUpQuestion}
-          </div>
-        )}
-      </div>
-    );
+  // Render message natively since its text is now progressively updated via state
+  const renderMessageContent = (msg, msgIndex) => {
+    return <p className="font-bold text-sm leading-relaxed whitespace-pre-line break-words">{msg.text}</p>;
   };
 
   const containerVariants = {
@@ -379,7 +318,7 @@ const Consultation = () => {
                       ? 'bg-med-primary text-white rounded-tr-none'
                       : 'bg-slate-50 border border-slate-100 rounded-tl-none text-slate-900'
                   }`}>
-                    {renderMessageContent(msg)}
+                    {renderMessageContent(msg, i)}
                     
                     {msg.triage && (
                       <div className="mt-4 pt-4 border-t border-slate-100">
@@ -449,16 +388,16 @@ const Consultation = () => {
                   <motion.button 
                     type="button"
                     onClick={toggleMic}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`w-[48px] h-[48px] rounded-full flex items-center justify-center transition-all cursor-pointer ${
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.92 }}
+                    className={`w-[56px] h-[56px] rounded-full flex items-center justify-center transition-all cursor-pointer shadow-sm ${
                       isListening
-                        ? 'bg-red-50 text-red-500 animate-pulse'
-                        : 'bg-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-100'
+                        ? 'bg-red-100 text-red-500 ring-4 ring-red-200/60 animate-pulse'
+                        : 'bg-blue-50 text-blue-500 hover:text-blue-600 hover:bg-blue-100 hover:ring-4 hover:ring-blue-200/40'
                     }`}
                     title="Voice Input"
                   >
-                    {isListening ? <MicOff size={24} /> : <Mic size={24} />}
+                    {isListening ? <MicOff size={28} /> : <Mic size={28} />}
                   </motion.button>
                   <motion.button
                     type="submit"

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mic, X, MicOff, Send, Waves, ShieldCheck, Cpu, AlertTriangle, CheckCircle } from 'lucide-react';
+import { streamToState } from '../../utils/streamMessage';
 
 const VoiceChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -105,13 +106,20 @@ const VoiceChatbot = () => {
           recText = `💡 Recommendation:\n${rec}`;
         }
 
-        const botResponse = {
-          id: Date.now() + 1,
-          text: `${riskText}\n\n📋 Category: ${data.category}\n\n${recText}${data.emergency ? '\n\n⚠️ EMERGENCY DETECTED - Seek immediate medical attention!' : ''}`,
+        // Determine text to speak
+        const fullBotText = `${riskText}\n\n📋 Category: ${data.category}\n\n${recText}${data.emergency ? '\n\n⚠️ EMERGENCY DETECTED - Seek immediate medical attention!' : ''}`;
+            
+        const botMessageId = Date.now();
+        const botMessage = {
+          id: botMessageId,
+          text: '', // Start empty
           type: 'bot',
           triage: data
         };
-        setMessages(prev => [...prev, botResponse]);
+        setMessages(prev => [...prev, botMessage]);
+        
+        // Stream text progressively
+        streamToState(fullBotText, botMessageId, setMessages, 'text');
       } else {
         throw new Error(data.error || 'Triage failed');
       }
@@ -144,15 +152,15 @@ const VoiceChatbot = () => {
         whileHover={{ scale: 1.05, y: -5 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-12 right-12 w-20 h-20 bg-[#191919] rounded-[2rem] flex items-center justify-center z-[60] shadow-[0_20px_40px_rgba(0,0,0,0.3)] group overflow-hidden border border-white/10"
+        className="fixed bottom-12 right-12 w-28 h-28 bg-[#191919] rounded-[2.5rem] flex items-center justify-center z-[60] shadow-[0_20px_40px_rgba(0,0,0,0.3)] group overflow-hidden border border-white/10"
       >
         <div className="absolute inset-0 bg-gradient-to-br from-[#d4ff60]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
         <div className="relative">
-            <Mic className="w-8 h-8 text-[#d4ff60]" />
+            <Mic className="w-12 h-12 text-[#d4ff60]" />
             <motion.div
                 animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.2, 0.5] }}
                 transition={{ repeat: Infinity, duration: 3 }}
-                className="absolute -inset-4 bg-[#d4ff60]/10 rounded-full blur-xl"
+                className="absolute -inset-6 bg-[#d4ff60]/10 rounded-full blur-xl"
             />
         </div>
       </motion.button>
@@ -212,7 +220,7 @@ const VoiceChatbot = () => {
                         : 'bg-[#2a2a2a] text-white rounded-3xl rounded-tl-none'
                     }`}>
                       {m.text.split('\n').map((line, i) => (
-                        <div key={i}>{line}</div>
+                        <div key={i} className="min-h-[1.5em]">{line}</div>
                       ))}
                     </div>
                   </motion.div>
@@ -269,39 +277,39 @@ const VoiceChatbot = () => {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={toggleListening}
-                            className={`relative w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${
+                            className={`relative w-20 h-20 rounded-[2rem] flex items-center justify-center transition-all ${
                                 isListening ? 'bg-[#d4ff60] text-black' : 'bg-[#1e1e1e] text-[#d4ff60]'
                             } border border-white/10 shadow-2xl`}
                         >
                             {isListening ? (
-                                <div className="flex gap-0.5">
+                                <div className="flex gap-1">
                                     {[1,2,3].map(i => (
                                         <motion.div
                                             key={i}
-                                            animate={{ height: [8, 20, 8] }}
+                                            animate={{ height: [12, 28, 12] }}
                                             transition={{ repeat: Infinity, duration: 0.5, delay: i * 0.1 }}
-                                            className="w-1 bg-black rounded-full"
+                                            className="w-1.5 bg-black rounded-full"
                                         />
                                     ))}
                                 </div>
-                            ) : <Mic className="w-6 h-6" />}
+                            ) : <Mic className="w-10 h-10" />}
                         </motion.button>
                     </div>
 
                     {/* Text Input */}
-                    <div className="flex-1 relative group">
+                    <div className="flex-1 relative group h-20 flex items-center">
                         <input
                             value={inputText}
                             onChange={(e) => setInputText(e.target.value)}
                             onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(inputText)}
-                            className="w-full bg-[#1e1e1e] pl-6 pr-14 py-4 rounded-2xl text-[16px] text-white outline-none font-medium placeholder:text-gray-600 border border-white/5 focus:border-[#d4ff60]/30 transition-all shadow-inner"
+                            className="w-full h-full bg-[#1e1e1e] pl-6 pr-16 rounded-2xl text-[16px] text-white outline-none font-medium placeholder:text-gray-600 border border-white/5 focus:border-[#d4ff60]/30 transition-all shadow-inner"
                             placeholder={isListening ? "Listening..." : "Describe symptoms..."}
                         />
                         <button
                             onClick={() => handleSendMessage(inputText)}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#d4ff60] text-black rounded-xl flex items-center justify-center hover:scale-105 transition-transform"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-[#d4ff60] text-black rounded-xl flex items-center justify-center hover:scale-105 transition-transform"
                         >
-                            <Send className="w-5 h-5" />
+                            <Send className="w-6 h-6" />
                         </button>
                     </div>
                 </div>
