@@ -14,12 +14,63 @@ const COOLDOWN_MS = 2 * 60 * 1000;
 async function triggerEmergency(req, res, next) {
   try {
     const userId = req.userId;
-    const { emergencyType, latitude, longitude, userName } = req.body;
+    const { emergencyType, userName } = req.body;
+
+    // Extract coordinates robustly from various possible payload formats
+    let rawLat = req.body.latitude;
+    let rawLng = req.body.longitude;
+    let locationSource = 'body';
+
+    if (rawLat === undefined || rawLat === null || rawLat === '') {
+      if (req.body.lat !== undefined && req.body.lat !== null && req.body.lat !== '') {
+        rawLat = req.body.lat;
+        rawLng = req.body.lng;
+        locationSource = 'body.lat/lng';
+      } else if (req.body.location && typeof req.body.location === 'object') {
+        rawLat = req.body.location.latitude !== undefined ? req.body.location.latitude : req.body.location.lat;
+        rawLng = req.body.location.longitude !== undefined ? req.body.location.longitude : req.body.location.lng;
+        locationSource = 'body.location';
+      } else if (req.body.patientInfo && typeof req.body.patientInfo === 'object') {
+        const pLoc = req.body.patientInfo.location;
+        if (pLoc && typeof pLoc === 'string' && pLoc.includes(',')) {
+          const parts = pLoc.split(',');
+          if (parts.length === 2) {
+            rawLat = parts[0].trim();
+            rawLng = parts[1].trim();
+            locationSource = 'body.patientInfo.location';
+          }
+        }
+      }
+    }
+
+    let parsedLat = (rawLat !== undefined && rawLat !== null && rawLat !== '') ? parseFloat(rawLat) : null;
+    let parsedLng = (rawLng !== undefined && rawLng !== null && rawLng !== '') ? parseFloat(rawLng) : null;
+
+    if (isNaN(parsedLat)) parsedLat = null;
+    if (isNaN(parsedLng)) parsedLng = null;
 
     console.log("=== EMERGENCY TRIGGER REQUEST ===");
     console.log("Request Body:", JSON.stringify(req.body, null, 2));
-    console.log("Location Coordinates:", { latitude, longitude });
+    console.log(`[Emergency] Location Source Extracted: ${locationSource}`);
     console.log("================================");
+
+    // Strict Logging in the requested format
+    console.log("[Emergency]");
+    console.log(`Received Latitude: ${parsedLat !== null ? parsedLat : 'None'}`);
+    console.log(`Received Longitude: ${parsedLng !== null ? parsedLng : 'None'}`);
+
+    const hasValidCoords = parsedLat !== null && parsedLng !== null;
+
+    if (hasValidCoords) {
+      console.log("Payload Valid");
+      console.log("Generating Google Maps URL");
+      console.log("Sending Telegram Alert");
+    } else {
+      console.log("Coordinates Missing or Invalid");
+      const frontendSent = (req.body.latitude !== undefined || req.body.lat !== undefined || (req.body.patientInfo && req.body.patientInfo.location && req.body.patientInfo.location.includes(','))) ? "✓" : "✗";
+      console.log(`Frontend sent coordinates: ${frontendSent}`);
+      console.log("Backend received coordinates: ✗");
+    }
 
     if (!emergencyType) {
       throw new ValidationError('Emergency type is required');
@@ -27,8 +78,6 @@ async function triggerEmergency(req, res, next) {
 
     const now = Date.now();
     const isEmergency = true; // Manual trigger is always high-priority emergency
-
-    console.log(`[EMERGENCY API PAYLOAD] userId: ${userId} | Type: ${emergencyType} | Lat: ${latitude} | Lng: ${longitude} | Name: ${userName}`);
 
     if (cooldowns[userId] && (now - cooldowns[userId]) < COOLDOWN_MS && !isEmergency) {
       const remaining = Math.ceil((COOLDOWN_MS - (now - cooldowns[userId])) / 1000);
@@ -74,14 +123,14 @@ async function triggerEmergency(req, res, next) {
     }
 
     // Log emergency to Supabase BEFORE triggering Telegram alert to ensure it's saved first
-    const mapsUrl = latitude && longitude ? `https://www.google.com/maps?q=${latitude},${longitude}` : null;
+    const mapsUrl = hasValidCoords ? `https://www.google.com/maps?q=${parsedLat},${parsedLng}` : null;
     const { data: dbLog, error: dbErr } = await supabase.from('emergency_logs').insert([{
       user_id: userId,
       emergency_type: emergencyType,
       action_taken: 'telegram_broadcast_initiated',
       symptoms_report: `Initiating broadcast to ${linkedContacts.length} contacts`,
-      latitude: latitude ? parseFloat(latitude) : null,
-      longitude: longitude ? parseFloat(longitude) : null,
+      latitude: parsedLat,
+      longitude: parsedLng,
       maps_url: mapsUrl,
       pdf_sent: false,
       telegram_sent: false,
@@ -92,14 +141,17 @@ async function triggerEmergency(req, res, next) {
       console.error("❌ Failed to insert emergency log before broadcast:", dbErr);
     }
 
+    const resolvedPatientName = userName || req.body.patientInfo?.name || null;
+
     // Use ONLY linkedContacts in broadcast and await it to prevent race conditions
     const result = await broadcastEmergencyAlert(linkedContacts, {
       userId,
-      patientName: userName || null,
+      patientName: resolvedPatientName,
       riskLevel: emergencyType,
       symptoms: req.body.symptoms || 'Not Available',
-      latitude,
-      longitude
+      latitude: parsedLat,
+      longitude: parsedLng,
+      textLocation: req.body.patientInfo?.location || (typeof req.body.location === 'string' ? req.body.location : null)
     });
 
     // Update the existing log entry with broadcast stats

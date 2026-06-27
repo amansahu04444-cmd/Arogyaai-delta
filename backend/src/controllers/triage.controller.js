@@ -44,8 +44,8 @@ const CRITICAL_KEYWORDS = [
 ];
 
 const getNearestHospitalFromDB = (lat, lng) => {
-  const baseLat = lat || 23.2599;
-  const baseLng = lng || 77.4126;
+  const baseLat = (lat !== undefined && lat !== null && lat !== '' && !isNaN(parseFloat(lat))) ? parseFloat(lat) : 23.2599;
+  const baseLng = (lng !== undefined && lng !== null && lng !== '' && !isNaN(parseFloat(lng))) ? parseFloat(lng) : 77.4126;
 
   const HOSPITAL_DB = [
     { name: "Bhopal Memorial Hospital & Research Centre", lat: 23.3012, lng: 77.4182 },
@@ -215,14 +215,21 @@ exports.processTriage = async (req, res) => {
                 console.error("❌ Error fetching/generating QR for Telegram:", qrFetchErr);
               }
 
-              const nearestHospital = getNearestHospitalFromDB(lat, lng);
+              const hasLat = lat !== undefined && lat !== null && lat !== '';
+              const hasLng = lng !== undefined && lng !== null && lng !== '';
+              let parsedLat = hasLat ? parseFloat(lat) : null;
+              let parsedLng = hasLng ? parseFloat(lng) : null;
+              if (isNaN(parsedLat)) parsedLat = null;
+              if (isNaN(parsedLng)) parsedLng = null;
+
+              const nearestHospital = getNearestHospitalFromDB(parsedLat, parsedLng);
               const broadcastResult = await broadcastEmergencyAlert(linkedContacts, {
                 userId,
                 patientName: userName || null,
                 riskLevel: apiData.risk_level || 'HIGH',
                 symptoms: text,
-                latitude: lat,
-                longitude: lng,
+                latitude: parsedLat,
+                longitude: parsedLng,
                 qrCode: qrUrl || null
               });
 
@@ -232,7 +239,7 @@ exports.processTriage = async (req, res) => {
               }
 
               // Save to emergency_logs with detailed tracking columns
-              const mapsUrl = lat && lng ? `https://www.google.com/maps?q=${lat},${lng}` : null;
+              const mapsUrl = (parsedLat !== null && parsedLng !== null) ? `https://www.google.com/maps?q=${parsedLat},${parsedLng}` : null;
               const logEntry = {
                 user_id: userId,
                 emergency_type: apiData.risk_level || 'HIGH',
@@ -247,8 +254,8 @@ exports.processTriage = async (req, res) => {
                   hospital: nearestHospital
                 }),
                 hospital_referred: nearestHospital ? `${nearestHospital.name} (${nearestHospital.distance})` : null,
-                latitude: lat ? parseFloat(lat) : null,
-                longitude: lng ? parseFloat(lng) : null,
+                latitude: parsedLat,
+                longitude: parsedLng,
                 maps_url: mapsUrl,
                 pdf_sent: !!broadcastResult.pdfSent,
                 telegram_sent: telegramSent,

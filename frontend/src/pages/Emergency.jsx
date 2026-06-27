@@ -39,6 +39,8 @@ const Emergency = () => {
       if (import.meta.env.DEV) {
         console.log("Authenticated User:", user);
       }
+      const hasLat = lat !== undefined && lat !== null && lat !== '';
+      const hasLng = lng !== undefined && lng !== null && lng !== '';
       const payload = {
         user_id: user.id,
         emergency_type: emergencyType,
@@ -48,9 +50,9 @@ const Emergency = () => {
         contact_alerted: formData.contact || null,
         hospital_referred: null,
         triggered_at: new Date().toISOString(),
-        latitude: lat ? parseFloat(lat) : null,
-        longitude: lng ? parseFloat(lng) : null,
-        maps_url: lat && lng ? `https://www.google.com/maps?q=${lat},${lng}` : null
+        latitude: hasLat ? parseFloat(lat) : null,
+        longitude: hasLng ? parseFloat(lng) : null,
+        maps_url: hasLat && hasLng ? `https://www.google.com/maps?q=${lat},${lng}` : null
       };
       if (import.meta.env.DEV) {
         console.log("Insert Payload:", payload);
@@ -178,9 +180,8 @@ const Emergency = () => {
       } catch (retryErr) {
         console.error("❌ [GEOLOCATION] Geolocation retry failed:", retryErr.message);
         setLocationStatus('failed');
-        setError('Location permission or GPS signal required for emergency alerts. Please enable location services and try again.');
-        setIsLoading(false);
-        return;
+        // Do NOT block alert submission. Log and proceed with null coordinates fallback
+        console.warn("⚠️ [GEOLOCATION] Proceeding with SOS alert dispatch without GPS coordinates.");
       }
     }
 
@@ -188,18 +189,23 @@ const Emergency = () => {
     setPdfStatus('loading');
 
     console.log("=== SUBMITTING EMERGENCY SOS ===");
-    console.log("Coords Captured:", coords);
+    console.log("Coords Captured by Browser:", coords ? `✓ (${coords.latitude}, ${coords.longitude})` : "✗ (None)");
 
     try {
-      await saveEmergencyToSupabase(formData.emergencyType, `${coords.latitude},${coords.longitude}`, coords.latitude, coords.longitude);
+      await saveEmergencyToSupabase(
+        formData.emergencyType,
+        coords ? `${coords.latitude},${coords.longitude}` : (formData.patientInfo.location || 'Location Description Unavailable'),
+        coords ? coords.latitude : null,
+        coords ? coords.longitude : null
+      );
 
       const payload = {
         ...formData,
-        latitude: coords.latitude,
-        longitude: coords.longitude,
+        latitude: coords ? coords.latitude : null,
+        longitude: coords ? coords.longitude : null,
         patientInfo: {
           ...formData.patientInfo,
-          location: `${coords.latitude},${coords.longitude}`
+          location: coords ? `${coords.latitude},${coords.longitude}` : (formData.patientInfo.location || 'Location Description Unavailable')
         }
       };
       

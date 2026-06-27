@@ -82,14 +82,20 @@ async function resolvePatientName({ userId, patientName, patient, profile, famil
 /**
  * Resolves location link, falling back to last log coordinates if inputs are missing.
  */
-async function resolveLocation({ userId, latitude, longitude, supabase }) {
-  if (latitude !== undefined && latitude !== null && latitude !== '' &&
-      longitude !== undefined && longitude !== null && longitude !== '') {
-    return `https://maps.google.com/?q=${latitude},${longitude}`;
+async function resolveLocation({ userId, latitude, longitude, textLocation, supabase }) {
+  console.log(`[Emergency] Resolving location. Inputs: Lat=${latitude}, Lng=${longitude}, textLocation=${textLocation}`);
+
+  // 1. Direct input coordinates check (strict, non-simple truthy checks)
+  if (latitude !== undefined && latitude !== null && latitude !== '' && !isNaN(parseFloat(latitude)) &&
+      longitude !== undefined && longitude !== null && longitude !== '' && !isNaN(parseFloat(longitude))) {
+    console.log(`[Emergency] GPS Coordinates valid. Generating Google Maps URL.`);
+    return `https://www.google.com/maps?q=${latitude},${longitude}`;
   }
 
+  // 2. Fallback to last known location in database
   if (userId && supabase) {
     try {
+      console.log(`[Emergency] Attempting fallback: Querying last known location from database...`);
       const { data: lastLog } = await supabase
         .from('emergency_logs')
         .select('latitude, longitude')
@@ -100,14 +106,44 @@ async function resolveLocation({ userId, latitude, longitude, supabase }) {
         .limit(1)
         .maybeSingle();
 
-      if (lastLog && lastLog.latitude && lastLog.longitude) {
-        return `https://maps.google.com/?q=${lastLog.latitude},${lastLog.longitude}`;
+      if (lastLog && 
+          lastLog.latitude !== undefined && lastLog.latitude !== null && lastLog.latitude !== '' && !isNaN(parseFloat(lastLog.latitude)) &&
+          lastLog.longitude !== undefined && lastLog.longitude !== null && lastLog.longitude !== '' && !isNaN(parseFloat(lastLog.longitude))) {
+        console.log(`[Emergency] Last known location found in database: ${lastLog.latitude}, ${lastLog.longitude}`);
+        return `https://www.google.com/maps?q=${lastLog.latitude},${lastLog.longitude} (Last Known Location)`;
       }
     } catch (e) {
-      // Ignore
+      console.error(`[Emergency] Error fetching last known location:`, e.message);
+    }
+
+    // 3. Fallback to stored location (e.g. last appointment location)
+    try {
+      console.log(`[Emergency] Attempting fallback: Querying stored location from appointments...`);
+      const { data: lastAppt } = await supabase
+        .from('appointments')
+        .select('location')
+        .eq('user_id', userId)
+        .not('location', 'is', null)
+        .order('booked_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (lastAppt && lastAppt.location && lastAppt.location.trim() !== '') {
+        console.log(`[Emergency] Stored location found in appointments: ${lastAppt.location}`);
+        return `${lastAppt.location} (Stored Location)`;
+      }
+    } catch (e) {
+      console.error(`[Emergency] Error fetching stored location from appointments:`, e.message);
     }
   }
 
+  // 4. Fallback to emergency profile location / textLocation passed from frontend
+  if (textLocation && typeof textLocation === 'string' && textLocation.trim() !== '' && textLocation !== 'Location Description Unavailable') {
+    console.log(`[Emergency] Attempting fallback: Using emergency form location text: ${textLocation}`);
+    return `${textLocation} (Emergency Profile Location)`;
+  }
+
+  console.log(`[Emergency] All location fallbacks failed. Location Unavailable.`);
   return 'Location Unavailable';
 }
 
@@ -229,7 +265,9 @@ const retrySend = async (chatId, message) => {
  * Backwards compatible message builder (unused in unified flow, but kept).
  */
 function buildEmergencyMessage({ userName, emergencyType, latitude, longitude }) {
-  const mapsUrl = latitude && longitude ? `https://maps.google.com/?q=${latitude},${longitude}` : 'Location Unavailable';
+  const hasLat = latitude !== undefined && latitude !== null && latitude !== '' && !isNaN(parseFloat(latitude));
+  const hasLng = longitude !== undefined && longitude !== null && longitude !== '' && !isNaN(parseFloat(longitude));
+  const mapsUrl = (hasLat && hasLng) ? `https://www.google.com/maps?q=${latitude},${longitude}` : 'Location Unavailable';
   return [
     '🚨 AROGYAAI EMERGENCY ALERT',
     '',
@@ -262,7 +300,8 @@ async function broadcastEmergencyAlert(contacts, alertData) {
     qrUrl,
     qrCode,
     latitude,
-    longitude
+    longitude,
+    textLocation
   } = alertData;
 
   // 1. Resolve Patient Name
@@ -286,6 +325,7 @@ async function broadcastEmergencyAlert(contacts, alertData) {
     userId,
     latitude,
     longitude,
+    textLocation,
     supabase
   });
 
